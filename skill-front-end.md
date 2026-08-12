@@ -1,74 +1,165 @@
 ---
-name: frontend-craft
-description: Guia completo para construir interfaces de front-end (React/Electron/Web) com design visual distinto E código de qualidade. Use sempre que o usuário pedir para criar, redesenhar ou revisar uma tela, componente, landing page, dashboard, formulário ou qualquer parte de uma UI. Cobre tanto decisões estéticas (paleta, tipografia, layout, motion) quanto arquitetura de componentes React, gerenciamento de estado, performance e acessibilidade. Ative esta skill mesmo que o usuário não diga explicitamente "design" — basta mencionar tela, interface, componente, página ou app.
+name: boas-praticas-fullstack
+description: Use esta skill sempre que for planejar, escrever, revisar ou refatorar código em projetos que usam React, TypeScript, TailwindCSS ou Node.js — inclui criar uma feature nova, corrigir um bug, montar um endpoint, criar um componente, ou fazer scaffold de um projeto do zero. Consulte esta skill ANTES de começar a implementar (para planejar a abordagem) e ANTES de considerar a tarefa concluída (como checklist final de qualidade). Aplique por padrão mesmo que o usuário não peça explicitamente "boas práticas", "qualidade" ou "arquitetura" — o objetivo é evitar código apressado, sem tipagem, sem tratamento de erro ou sem estrutura, mesmo em tarefas que parecem pequenas ou pedidos que pareçam simples.
 ---
 
-# Frontend Craft
+# Boas práticas full-stack — React, TypeScript, TailwindCSS e Node.js
 
-Esta skill combina duas responsabilidades que normalmente ficam separadas: **direção visual** (para a UI não parecer genérica) e **engenharia de front-end** (para o código ser sustentável). Trate cada tarefa de UI como se estivesse contratado tanto para o design quanto para a implementação — as duas decisões se afetam mutuamente.
+O maior risco ao gerar código rápido não é a sintaxe errada — é entregar algo que "funciona no happy path" mas que quebra silenciosamente, é impossível de manter, ou empurra decisões de arquitetura ruins para o futuro. Esta skill existe para forçar uma pausa de planejamento antes de codar e uma checagem de qualidade antes de entregar, sem burocratizar tarefas pequenas.
 
-## Parte 1 — Direção visual
+Duas regras que guiam tudo abaixo:
+1. **Planejar 2 minutos economiza 20 minutos de retrabalho.** Um esboço rápido da abordagem evita reescrever componentes ou endpoints inteiros depois.
+2. **Tipagem e tratamento de erro não são "extras" — são o código.** Um componente sem estado de erro, ou uma rota sem validação de entrada, está incompleto, não "pronto mais simples".
 
-### Ancore no produto real
-Antes de desenhar qualquer coisa, defina: qual é o produto, quem usa, e qual é o único trabalho desta tela. Se o usuário já tem um projeto com identidade própria (nome, paleta, tom), use essa identidade como ponto de partida em vez de reinventar. Evite os três "defaults" que todo modelo de IA tende a produzir:
-1. Fundo bege/creme + serifada de alto contraste + accent terracota.
-2. Fundo quase preto + um único accent neon (verde-ácido ou vermelho).
-3. Layout estilo jornal, hairlines, zero border-radius, colunas densas.
+---
 
-Esses três são válidos *se o briefing pedir por eles* — o problema é usá-los por padrão, sem justificativa ligada ao produto.
+## 1. Antes de codar: planeje em voz alta
 
-### Processo em duas passadas
-1. **Rascunho do sistema de tokens**, antes de escrever qualquer código:
-   - **Cor**: 4–6 hex nomeados (ex: `--void: #0B0B12`, `--violet-glow: #8B5CF6`).
-   - **Tipografia**: fonte de destaque (usada com moderação) + fonte de corpo + fonte utilitária para dados/legendas.
-   - **Layout**: descreva o conceito em 1 frase + wireframe ASCII se ajudar.
-   - **Elemento-assinatura**: a UMA coisa marcante que essa tela vai ser lembrada por ter.
-2. **Autocrítica antes de construir**: releia o rascunho e pergunte "isso é uma escolha específica deste produto, ou é o que eu geraria para qualquer projeto parecido?". Se for genérico, revise e anote o que mudou.
+Para qualquer tarefa que não seja uma alteração trivial de uma linha, resuma antes de escrever código:
 
-### Princípios de design
-- **Hero como tese**: abra com a coisa mais característica do produto (headline, demo ao vivo, animação) — não com "número grande + label pequeno + gradiente" por padrão.
-- **Tipografia carrega personalidade**: pareie display e corpo deliberadamente; defina uma escala clara de pesos e espaçamentos.
-- **Estrutura é informação**: numeração, divisores e labels só fazem sentido se codificarem algo real (uma sequência de fato, por exemplo). Não decore com "01 / 02 / 03" só porque parece bonito.
-- **Motion com propósito**: escolha *onde* a animação serve ao produto (entrada, scroll-reveal, micro-interação de hover) em vez de espalhar efeitos. Às vezes nenhuma animação é a escolha certa.
-- **Gaste ousadia em um lugar só**: deixe o elemento-assinatura ser o único momento memorável; mantenha o resto disciplinado.
-- **Piso de qualidade obrigatório, sem anunciar**: responsivo até mobile, foco de teclado visível, `prefers-reduced-motion` respeitado.
+- **O que exatamente está sendo pedido** — se o pedido for ambíguo, assuma a interpretação mais razoável e declare a suposição em vez de travar esperando esclarecimento.
+- **Onde isso se encaixa no projeto existente** — antes de criar um padrão novo, olhe como o projeto já resolve problemas parecidos (outro componente, outro endpoint, outro hook) e siga a convenção existente em vez de inventar uma terceira forma de fazer a mesma coisa.
+- **Quais são os estados que a UI ou a API precisam cobrir** — não só o caminho feliz: carregando, vazio, erro, sem permissão, dado inválido.
+- **O que pode ser quebrado em passos pequenos e testáveis**, em vez de uma função gigante que faz tudo de uma vez.
 
-### Copy é material de design
-Escreva do lado de quem usa a tela, não de como o sistema foi construído ("gerenciar notificações", não "config de webhook"). Voz ativa: um botão que diz "Salvar alterações" deve gerar um toast "Alterações salvas" — o vocabulário não muda no meio do fluxo. Erros explicam o que aconteceu e como resolver, sem se desculpar. Telas vazias convidam a uma ação.
+Isso não precisa ser formal — pode ser 3-4 frases antes do código. O ponto é pensar na forma antes de pensar na sintaxe.
 
-## Parte 2 — Arquitetura e código React
+---
+
+## 2. Princípios gerais (valem para front e back)
+
+- **Nomes dizem o que a coisa faz.** `getUserOrders`, não `getData`. Se o nome precisa de comentário explicando, o nome está errado.
+- **Funções e componentes pequenos, uma responsabilidade cada.** Se está difícil descrever o que uma função faz em uma frase sem "e", ela provavelmente devia ser duas.
+- **Erros nunca são silenciosos.** Nada de `catch {}` vazio ou `catch (e) { console.log(e) }` como tratamento final — ou trate o erro de verdade (retry, fallback, mensagem pro usuário) ou deixe ele propagar para quem sabe tratar.
+- **DRY com moderação.** Duplicação de 2 linhas não justifica uma abstração genérica nova — abstraia quando o padrão se repetir umas 3 vezes e a forma já estiver clara, não antes.
+- **Tipos e validação são a primeira linha de defesa**, não uma formalidade pra passar no build. `any` e `unknown` sem narrowing são um sinal de que o problema não foi modelado, não uma solução.
+- **Segredos, chaves de API e credenciais nunca vão no código.** Sempre variáveis de ambiente, nunca hardcoded, nem "temporariamente" nem em exemplo.
+
+---
+
+## 3. Frontend — React + TypeScript + TailwindCSS
 
 ### Estrutura de componentes
-- Um componente = uma responsabilidade. Se o componente precisa de comentário tipo "// isso também faz X", provavelmente deve ser dois componentes.
-- Componentes de apresentação (só UI, recebem props) separados de componentes de container/lógica (buscam dados, gerenciam estado). Isso facilita testar e reaproveitar visual sem lógica junto.
-- Nomeie arquivos e pastas por domínio, não por tipo técnico: prefira `features/auth/LoginForm.jsx` a `components/forms/LoginForm.jsx` quando o projeto crescer.
-- Hooks customizados (`useX`) para extrair lógica reutilizável (fetch, formulário, debounce) para fora do componente visual.
+- Componentes pequenos e composáveis. Se um componente passou de ~150-200 linhas ou mistura muita lógica de dados com muita lógica visual, extraia um hook (`useAlgumaCoisa`) para a lógica e deixe o componente focado em renderizar.
+- Separe "container" (busca dados, tem estado) de "apresentação" (recebe props, renderiza) quando o componente cresce — isso facilita reutilizar a parte visual e testar a lógica isoladamente.
+- Evite prop drilling de mais de 2-3 níveis. Se muitos componentes intermediários só estão repassando uma prop sem usá-la, considere Context ou reestruturar a árvore de componentes.
+
+### TypeScript
+- Tipagem explícita em props, retornos de função pública e nas bordas do sistema (respostas de API, dados de formulário). Dentro de uma função pequena, inferência de tipo está ok.
+- `any` é o último recurso, não o primeiro. Se o tipo é genuinamente desconhecido, use `unknown` e faça narrowing, não `any` pra silenciar o compilador.
+- Modele estados impossíveis para fora do tipo. Em vez de `{ data?: T; loading: boolean; error?: string }` (que permite `loading: true` com `data` preenchido ao mesmo tempo), prefira uma union:
+  ```ts
+  type RequestState<T> =
+    | { status: "idle" }
+    | { status: "loading" }
+    | { status: "success"; data: T }
+    | { status: "error"; message: string };
+  ```
+- Ative (ou respeite, se já ativo) o `strict` do `tsconfig.json`. Não desligue regras de tipo para "fazer o erro sumir" — resolva a causa.
 
 ### Estado
-- Estado local (`useState`) para o que só aquele componente usa. Suba o estado (`lift state up`) apenas até o ancestral comum mais próximo que realmente precisa dele — evitar tanto estado "preso demais embaixo" quanto "context global desnecessário".
-- Context API para estado verdadeiramente global e raramente mutável (tema, usuário autenticado). Para estado que muda com frequência e afeta muitos componentes, considerar uma lib dedicada (Zustand, Redux Toolkit) em vez de Context puro, que re-renderiza a árvore inteira.
-- Nunca duplicar estado derivável — calcule na renderização (ou com `useMemo` se for caro) em vez de guardar em outro `useState` sincronizado manualmente.
+- Estado local (`useState`) por padrão. Suba o estado (lifting) só quando dois componentes realmente precisam compartilhá-lo. Não crie contexto global para algo que só um componente usa.
+- Dado que vem do servidor (API) não é "estado do componente" — trate como cache. Se o projeto já usa uma lib de data-fetching (React Query, SWR, RTK Query), siga o padrão existente em vez de reinventar fetch + `useEffect` + `useState` manualmente.
+- `useEffect` é para sincronizar com sistemas externos (DOM, subscriptions, APIs), não uma solução genérica para "rodar algo depois". Se o efeito só está derivando um valor a partir de outro estado, calcule direto no render.
+
+### TailwindCSS
+- Extraia combinações de classes repetidas para um componente ou para uma função utilitária (`clsx`/`cva`) em vez de copiar a mesma string gigante de classes em vários lugares.
+  ```tsx
+  const buttonStyles = cva("rounded-md font-medium transition-colors", {
+    variants: {
+      variant: {
+        primary: "bg-blue-600 text-white hover:bg-blue-700",
+        secondary: "bg-gray-100 text-gray-900 hover:bg-gray-200",
+      },
+      size: { sm: "px-3 py-1.5 text-sm", md: "px-4 py-2 text-base" },
+    },
+  });
+  ```
+- Prefira os tokens do tema (`text-gray-600`, `rounded-lg`, escala de espaçamento padrão) a valores arbitrários (`text-[#4b5563]`, `mt-[13px]`) — valores arbitrários indicam que falta alinhar com o design system do projeto, ou que o design system precisa desse token.
+- Sempre pense em responsividade (`sm:`, `md:`, `lg:`) quando o componente for parte de uma tela real, não só de um teste isolado.
+- Acessibilidade não é opcional: elementos interativos usam `<button>`/`<a>` reais (não `<div onClick>`), imagens têm `alt`, inputs têm `<label>` associado, e o contraste de cor segue o tema do projeto.
+
+### Estados de carregamento, erro e vazio
+Todo componente que busca dados assíncronos precisa cobrir, no mínimo:
+- **Carregando** — skeleton ou spinner, não uma tela em branco.
+- **Erro** — mensagem legível para o usuário, não o erro técnico cru.
+- **Vazio** — o que mostrar quando a lista/resultado é vazio de verdade (isso não é o mesmo que erro).
 
 ### Performance
-- `useMemo`/`useCallback` só quando há um problema medido (renderizações caras, listas grandes, props passadas para componentes memoizados) — não por padrão em todo componente.
-- Code-splitting com `React.lazy` + `Suspense` para rotas e telas pesadas que não são carregadas de início.
-- Listas grandes: `key` estável (nunca o índice do array, quando a lista pode reordenar) e virtualização (`react-window`) acima de algumas centenas de itens.
+- `useMemo`/`useCallback`/`React.memo` resolvem um problema de performance medido, não são um reflexo automático — usá-los sem necessidade adiciona complexidade sem ganho real. Otimize quando notar (ou o usuário reportar) um problema real de re-render.
+- Em listas, sempre usar uma `key` estável e única (id do dado), nunca o índice do array quando a lista pode reordenar, filtrar ou ter itens inseridos/removidos.
 
-### Acessibilidade (não negociável)
-- HTML semântico primeiro (`<button>`, `<nav>`, `<label>`) antes de recriar comportamento com `<div onClick>`.
-- Todo elemento interativo alcançável e operável via teclado (`Tab`, `Enter`, `Space`), com foco visível.
-- Inputs sempre com `<label>` associado; imagens informativas com `alt` descritivo, decorativas com `alt=""`.
-- Contraste de cor mínimo AA, especialmente relevante em paletas escuras/neon — teste, não assuma.
+---
 
-### Estilização
-- Escolha uma abordagem por projeto e seja consistente: CSS Modules, Tailwind ou styled-components — não misture duas no mesmo componente sem motivo.
-- Tokens de design (cores, espaçamentos, tipografia) centralizados em variáveis (CSS custom properties ou tema do Tailwind), nunca hex/px soltos espalhados pelos componentes.
-- Cuidado com especificidade de seletores: selector por classe de seção (`.section`) e por elemento (`.cta`) podem colidir de forma inesperada em paddings/margins — prefira classes específicas e evite aninhamento profundo.
+## 4. Backend — Node.js
 
-### Checklist antes de entregar
-1. O componente tem uma responsabilidade clara?
-2. Existe estado duplicado ou desnecessariamente global?
-3. Funciona 100% via teclado e tem foco visível?
-4. Responsivo em mobile?
-5. As cores/tipografia vêm de tokens centralizados, não de valores soltos?
-6. O elemento-assinatura do design ainda está lá, e o resto está discreto ao redor dele?
+### Arquitetura em camadas
+Evite lógica de negócio direto dentro do handler da rota. Separe em camadas, mesmo em projetos pequenos — isso facilita testar e trocar peças depois:
+```
+routes/     → define os endpoints, delega pro controller
+controllers/→ lê request, chama o service, formata a response
+services/   → regra de negócio, não sabe nada de HTTP
+repositories/ (ou data/) → acesso a banco/API externa
+```
+Um handler de rota que faz parsing, validação, query no banco e formatação de resposta tudo junto é o sinal mais comum de código "rápido demais" — quebre isso mesmo que o endpoint pareça simples hoje.
+
+### Validação de entrada
+Nunca confie no que vem do cliente. Valide body, query params e params de rota na borda, antes de qualquer lógica de negócio — com uma lib de schema (Zod, Yup) sempre que o projeto já usar uma:
+```ts
+const createOrderSchema = z.object({
+  productId: z.string().uuid(),
+  quantity: z.number().int().positive(),
+});
+
+const parsed = createOrderSchema.safeParse(req.body);
+if (!parsed.success) {
+  return res.status(400).json({ error: "Dados inválidos", details: parsed.error.flatten() });
+}
+```
+
+### Tratamento de erros e respostas de API
+- Formato de erro consistente em toda a API (ex.: `{ error: string, details?: unknown }`), não uma string solta às vezes e um objeto em outras.
+- Status HTTP corretos: 400 para entrada inválida, 401/403 para autenticação/autorização, 404 para recurso inexistente, 409 para conflito, 500 só para erro realmente inesperado do servidor.
+- Um error handler central (middleware) para capturar exceções não tratadas, em vez de `try/catch` repetido e inconsistente em cada rota.
+- Nunca vaze detalhes internos (stack trace, query SQL, path do arquivo) na resposta para o cliente em produção.
+
+### Assincronismo
+- Toda `Promise` tem que ter destino: `await` dentro de `try/catch`, ou `.catch()` explícito. Promise sem tratamento é um dos jeitos mais comuns de um erro sumir silenciosamente.
+- Cuidado com `Promise.all` quando uma falha não deve derrubar as outras operações — nesse caso, `Promise.allSettled` é mais adequado.
+
+### Segurança básica
+- Sanitizar/parametrizar toda query — nunca concatenar input do usuário direto numa query SQL (use o ORM/query builder ou prepared statements).
+- Rate limiting em endpoints sensíveis (login, criação de conta, endpoints públicos caros).
+- CORS configurado explicitamente para as origens esperadas, não `*` em produção.
+- Senhas e tokens: hash com algoritmo apropriado (bcrypt/argon2), nunca texto plano, nunca logados.
+
+### Logs e observabilidade
+- Log de erros com contexto suficiente para debugar (rota, id da requisição, payload relevante — sem dados sensíveis) em vez de só `console.log(error)`.
+- Nível de log adequado (info/warn/error) — nem tudo é `console.log`.
+
+---
+
+## 5. Armadilhas comuns ao gerar código rápido (evite)
+
+- Colocar tudo em um arquivo/componente gigante "pra terminar logo" — isso vira dívida técnica imediata.
+- Usar `any` ou `// @ts-ignore` para fazer o erro de tipo sumir em vez de resolver a causa.
+- Ignorar estado de erro/loading porque "o happy path funciona".
+- Copiar e colar um bloco de código em vez de extrair a parte comum, quando o padrão já se repetiu.
+- Validar só no frontend e assumir que o backend não precisa validar de novo.
+- Deixar `console.log` de debug espalhado no código final.
+- Nomes genéricos (`data`, `temp`, `handleClick2`) que não dizem nada sobre o que a coisa representa.
+- Misturar convenções diferentes das que já existem no projeto (ex.: criar um novo padrão de fetch quando já existe um hook padrão pra isso).
+
+---
+
+## 6. Checklist final antes de considerar a tarefa pronta
+
+Antes de entregar, revise rapidamente:
+
+- [ ] O código cobre erro, loading e vazio (quando envolve dados assíncronos)?
+- [ ] Não tem `any` nem `@ts-ignore` sem justificativa clara?
+- [ ] Entrada de usuário (frontend) e de requisição (backend) está validada?
+- [ ] Não tem segredo/chave hardcoded?
+- [ ] Nomes de variáveis, funções e componentes são autoexplicativos?
+- [ ] O padrão usado é consistente com o resto do projeto, não um padrão novo inventado à toa?
+- [ ] Se algo pode falhar (rede, banco, parsing), existe um `catch` que trata isso de verdade?
