@@ -1,0 +1,41 @@
+{
+  "name": "skill-for-agents",
+  "version": "1.0.0",
+  "description": "CLI para importar e gerenciar skills de inteligência artificial / agentes de código em qualquer projeto",
+  "type": "module",
+  "main": "src/index.js",
+  "bin": {
+    "skill-for-agents": "./bin/cli.js",
+    "skills": "./bin/cli.js"
+  },
+  "files": [
+    "bin",
+    "src",
+    "skills",
+    "README.md"
+  ],
+  "scripts": {
+    "start": "node ./bin/cli.js",
+    "test": "node ./bin/cli.js --list"
+  },
+  "keywords": [
+    "skills",
+    "agents",
+    "ai",
+    "antigravity",
+    "gemini",
+    "claude",
+    "cli",
+    "npx"
+  ],
+  "author": "mateus-fer09",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mateus-fer09/skill-for-agents.git"
+  },
+  "dependencies": {
+    "@clack/prompts": "^0.8.2",
+    "picocolors": "^1.1.1"
+  }
+}
