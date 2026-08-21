@@ -5,8 +5,8 @@
   "type": "module",
   "main": "src/index.js",
   "bin": {
-    "skill-for-agents": "./bin/cli.js",
-    "skills": "./bin/cli.js"
+    "skill-for-agents": "bin/cli.js",
+    "skills": "bin/cli.js"
   },
   "files": [
     "bin",
@@ -32,7 +32,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/mateus-fer09/skill-for-agents.git"
+    "url": "git+https://github.com/mateus-fer09/skill-for-agents.git"
   },
   "dependencies": {
     "@clack/prompts": "^0.8.2",
