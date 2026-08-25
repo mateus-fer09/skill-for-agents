@@ -23,7 +23,6 @@ export async function run(args = process.argv.slice(2)) {
     all: args.includes('-a') || args.includes('--all'),
     dest: null,
     skill: null,
-    format: null,
     overwrite: !args.includes('--no-overwrite')
   };
 
@@ -33,9 +32,6 @@ export async function run(args = process.argv.slice(2)) {
     }
     if ((args[i] === '-s' || args[i] === '--skill') && args[i + 1]) {
       flags.skill = args[i + 1];
-    }
-    if ((args[i] === '-f' || args[i] === '--format') && args[i + 1]) {
-      flags.format = args[i + 1];
     }
   }
 
@@ -64,15 +60,13 @@ export async function run(args = process.argv.slice(2)) {
   // Modo Não-Interativo (Flags presentes)
   if (flags.all || flags.skill) {
     const destDir = flags.dest || '.agent/skills';
-    const format = flags.format === 'file' ? 'file' : 'folder';
     let selectedSkills = allSkills;
 
     if (flags.skill) {
       const requestedIds = flags.skill.split(',').map(s => s.trim().toLowerCase());
       selectedSkills = allSkills.filter(s =>
         requestedIds.includes(s.id.toLowerCase()) ||
-        requestedIds.includes(s.folderName.toLowerCase()) ||
-        requestedIds.includes(s.fileName.toLowerCase())
+        requestedIds.includes(s.folderName.toLowerCase())
       );
 
       if (selectedSkills.length === 0) {
@@ -83,10 +77,9 @@ export async function run(args = process.argv.slice(2)) {
     }
 
     console.log(`\n${pc.cyan('⚡ Importando skills...')}`);
-    console.log(`${pc.dim(`Destino: ${path.resolve(process.cwd(), destDir)}`)}`);
-    console.log(`${pc.dim(`Formato: ${format === 'folder' ? 'Pasta (<nome>/SKILL.md)' : 'Arquivo (.md)'}`)}\n`);
+    console.log(`${pc.dim(`Destino: ${path.resolve(process.cwd(), destDir)}`)}\n`);
 
-    const results = selectedSkills.map(skill => copySkill(skill, destDir, format, flags.overwrite));
+    const results = selectedSkills.map(skill => copySkill(skill, destDir, flags.overwrite));
 
     results.forEach(res => {
       if (res.status === 'created') {
@@ -138,21 +131,7 @@ export async function run(args = process.argv.slice(2)) {
     finalDest = customDest.trim();
   }
 
-  // 2. Formato das Skills
-  const formatChoice = await p.select({
-    message: 'Qual formato de estrutura você prefere?',
-    options: [
-      { value: 'folder', label: 'Pastas organizadas (<nome>/SKILL.md)', hint: 'Recomendado (padrão oficial de agentes)' },
-      { value: 'file', label: 'Arquivos avulsos (skill_<nome>.md)', hint: 'Todos os arquivos na mesma pasta' }
-    ]
-  });
-
-  if (p.isCancel(formatChoice)) {
-    p.cancel('Operação cancelada pelo usuário.');
-    process.exit(0);
-  }
-
-  // 3. Escolha das Skills
+  // 2. Escolha das Skills
   const selectionMode = await p.select({
     message: 'Quais skills você deseja importar?',
     options: [
@@ -187,14 +166,14 @@ export async function run(args = process.argv.slice(2)) {
     selectedSkills = allSkills.filter(s => manualChoices.includes(s.id));
   }
 
-  // 4. Executar Cópia com Spinner
+  // 3. Executar Cópia com Spinner
   const s = p.spinner();
   s.start('Importando skills para o seu projeto...');
 
   // Pequeno delay para efeito visual agradável
   await new Promise(resolve => setTimeout(resolve, 300));
 
-  const results = selectedSkills.map(skill => copySkill(skill, finalDest, formatChoice, true));
+  const results = selectedSkills.map(skill => copySkill(skill, finalDest, true));
 
   s.stop(pc.green(`✔ ${results.length} skill(s) importada(s) com sucesso!`));
 

@@ -23,7 +23,6 @@ npx github:mateus-fer09/skill-for-agents
 
 O assistente interativo guiará você para:
 - Escolher a pasta de destino (`.agent/skills/`, `.gemini/skills/`, `.claude/skills/`, `skills/` ou personalizada).
-- Escolher o formato de saída (pastas estruturadas `<nome>/SKILL.md` ou arquivos avulsos).
 - Selecionar **todas as skills** ou escolher manualmente da lista.
 
 ---
@@ -42,9 +41,6 @@ npx skill-for-agents --all --dest ./skills
 # Importar apenas skills específicas
 npx skill-for-agents --skill front-end,firebase,security --dest .agent/skills
 
-# Importar no formato de arquivos avulsos (.md) em vez de pastas
-npx skill-for-agents --all --format file
-
 # Listar o catálogo de skills disponíveis
 npx skill-for-agents --list
 ```
@@ -58,7 +54,6 @@ npx skill-for-agents --list
 | `--all` | `-a` | Importa todas as skills disponíveis | `false` |
 | `--dest <caminho>` | `-d` | Define o diretório de destino | `.agent/skills` |
 | `--skill <nomes>` | `-s` | Lista de skills separadas por vírgula | - |
-| `--format <formato>` | `-f` | Formato de saída: `folder` ou `file` | `folder` |
 | `--list` | `-l` | Lista todas as skills e descrições | - |
 | `--no-overwrite` | - | Não sobrescreve arquivos já existentes | `false` |
 | `--help` | `-h` | Exibe a mensagem de ajuda | - |
