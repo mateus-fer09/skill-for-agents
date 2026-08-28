@@ -12,7 +12,7 @@
 O **Skill for Agents** é um **Hub de Skills especializado**, criado para fornecer conhecimento técnico aprofundado, documentações estruturadas, regras de arquitetura e melhores práticas diretamente para os seus agentes de IA e assistentes de código.
 
 ### 🛑 O Problema: Alucinação e Falta de Contexto
-Ao programar com LLMs e agentes autônomos (Google Antigravity, Claude Code, Cursor, Gemini CLI, Windsurf, etc.), é comum que os modelos:
+Ao programar com LLMs e agentes autônomos (Google Antigravity, Claude Code, Cursor, Gemini CLI, Windsurf, Copilot, etc.), é comum que os modelos:
 - **Alucinem métodos ou parâmetros** inexistentes ou descontinuados.
 - Usem padrões legados ou sintaxes incompatíveis com versões recentes de bibliotecas.
 - Não sigam as melhores práticas de segurança, tipagem e organização arquitetural do seu ecossistema.
@@ -41,10 +41,10 @@ Diferente das **skills tradicionais** que concentram toda a documentação em um
 
 ### 🏆 As Vantagens dessa Abordagem:
 
-1. **💰 Economia Drástica de Tokens:** O agente não precisa despejar dezenas de milhares de tokens no contexto toda vez que for chamado. Ele consulta o `index_master.md` (ou `index.md`), localiza o arquivo exato e consome apenas uma fração minúscula do contexto.
+1. **💰 Economia Drástica de Tokens:** O agente não precisa despejar dezenas de milhares de tokens no contexto toda vez que for chamado. Ele consulta o `index_master.md`, localiza o arquivo exato e consome apenas uma fração minúscula do contexto.
 2. **🎯 Leitura Just-in-Time (On-Demand):** O agente lê **estritamente o que é necessário** para responder à dúvida ou implementar o recurso solicitado.
 3. **🧠 Foco e Retenção Cognitiva:** Reduz o efeito *"lost in the middle"* e a degradação de atenção da LLM, mantendo a janela de contexto limpa para o código do projeto, ferramentas e raciocínio.
-4. **📚 Cobertura Exaustiva sem Penalidade:** Permite cobrir 100% de APIs complexas (como OpenAI API, Electron ou React Flow em 20+ módulos detalhados) com profundidade de produção sem explodir o limite de tokens.
+4. **📚 Cobertura Exaustiva sem Penalidade:** Permite cobrir 100% de APIs complexas (como OpenAI API, Gemini API, React Flow ou Pine Script em dezenas de módulos detalhados) com profundidade de produção sem estourar limites de contexto.
 
 ---
 
@@ -114,37 +114,43 @@ npx skill-for-agents --list
 
 ---
 
-## 📚 Categorias do Hub de Skills
+## 📚 Catálogo de Categorias e Skills Atuais
 
-O hub cobre uma vasta gama de tópicos essenciais para desenvolvimento moderno:
+O repositório é estruturado em categorias com documentação completa e modular:
+
+```text
+skills/
+├── APIs/
+│   ├── ChatGPT/                             # OpenAI API (24 arquivos de referência)
+│   └── Gemini/                              # Google Gemini API (22 arquivos de referência)
+├── Banco de Dados/
+│   └── better-sqlite3-docs/better-sqlite3/  # Better SQLite3 (11 arquivos de referência)
+├── Bibliotecas React/
+│   └── skill_react_flow/                    # React Flow v12 (50 arquivos de referência)
+├── TradingView/
+│   └── skill_pine_script/                   # Pine Script v5 / v6 (35 arquivos de referência)
+└── skill_boas_praticas_arquitetura_software/ # Arquitetura de Software (31 arquivos de referência)
+```
 
 ### 🔌 APIs & Modelos de IA
-- **OpenAI / ChatGPT API**: Endpoints REST, Assistants API v2, Realtime API (Voz/WebRTC), Structured Outputs, Function Calling e Fine-tuning.
-- **Gemini API**: Integração com SDK Google Gen AI, chamadas multimodais, Context Caching e Agent Environment.
-- **Google Drive API**: Autenticação OAuth2/Service Account, upload, download, permissões e gerenciamento de arquivos.
-- **Appmax API**: Integração de pagamentos, checkout, pedidos e webhooks.
+- **OpenAI / ChatGPT API (`chatgpt`)** — `24 arquivos`: Endpoints REST, Chat Completions, Assistants API v2 (Threads, Vector Stores, Code Interpreter), Realtime API (Voz/WebRTC), Structured Outputs (Pydantic/Zod), Function Calling, Batch API, Fine-Tuning e Multimodalidade (Vision, Whisper, TTS, DALL-E).
+- **Google Gemini API (`gemini`)** — `22 arquivos`: Integração com SDK `@google/genai` v1 e Python, chamadas multimodais (áudio/vídeo/imagem), Context Caching, Agent Environment, Deep Research, Batch API, Function Calling e Structured Outputs.
 
-### 🎨 Front-End & Bibliotecas React
-- **React Flow**: Criação de fluxogramas interativos, nós e arestas customizados, layouts e estado complexo.
-- **TradingView / Pine Script**: Criação de scripts, indicadores, estratégias de backtesting e visualizações gráficas.
-- **Boas Práticas Fullstack / Front-End**: Diretrizes essenciais de React, TypeScript, TailwindCSS e estado global.
-- **UI/UX & Design Systems**: Acessibilidade, componentes modulares e padrões visuais modernos.
+### 🎨 Bibliotecas Front-End & Gráficos
+- **React Flow (`react-flow`)** — `50 arquivos`: Arquitetura completa para `@xyflow/react` v12, nós e arestas customizados, layouting com Dagre/Elkjs, subflows, componentes Shadcn UI/React Flow UI, estado com Zustand, SSR e performance.
+- **TradingView / Pine Script (`pine-script`)** — `35 arquivos`: Desenvolvimento profissional em Pine Script v5 e v6, estratégias, backtesting avançado, multi-timeframe (`request.security`), arrays, maps, matrizes, UDTs, sistema de alertas e renderização gráfica.
 
-### 🖥️ Desktop & Mobile
-- **Electron Completo**: Arquitetura multi-processo, IPC seguro via `contextBridge`/`preload`, gerenciamento de janelas/views, hardening e empacotamento com `electron-builder`.
-- **Kotlin & Jetpack Compose**: Padrões modernos para Android nativo, ViewModels, Coroutines e migração React ➔ Kotlin.
+### 💾 Bancos de Dados & Armazenamento
+- **Better SQLite3 (`better-sqlite3`)** — `11 arquivos`: Guia completo da API síncrona de alta performance para Node.js, prepared statements, transações atômicas, PRAGMAs otimizados, tabelas virtuais, extensões e migrações.
 
-### 🔒 Back-End, Segurança & Bancos de Dados
-- **Segurança Fullstack**: Checklist defensivo, headers HTTP, sanitização contra XSS/CSRF, autenticação e JWT.
-- **Firebase Integration**: Firebase Auth, Firestore e regras de segurança granulares.
-- **Better SQLite3**: Operações síncronas de alta performance, schemas e migrações.
-- **Boas Práticas de Arquitetura de Software**: Clean Architecture, SOLID, Design Patterns e desacoplamento de código.
+### 🏛️ Engenharia & Arquitetura de Software
+- **Boas Práticas de Arquitetura de Software (`boas-praticas-arquitetura-software`)** — `31 arquivos`: Clean Architecture, Arquitetura Hexagonal, Microsserviços, Monólito Modular, Event-Driven, Decisões de Contratos/APIs, Documentação com ADRs e C4 Model, Heurísticas de Qualidade, Resiliência e Checklist de Revisão.
 
 ---
 
 ## 🤖 Compatibilidade com Agentes e IDEs
 
-As skills geradas seguem o formato padrão de mercado (`SKILL.md` com metadados YAML e referências estruturadas), sendo 100% compatíveis com:
+As skills geradas seguem o padrão oficial de mercado (`SKILL.md` com metadados YAML e árvores de arquivos modulares), sendo 100% compatíveis com:
 
 - **Google Antigravity / Gemini CLI**: `.agent/skills/` ou `.gemini/skills/`
 - **Claude Code**: `.claude/skills/`
@@ -155,15 +161,15 @@ As skills geradas seguem o formato padrão de mercado (`SKILL.md` com metadados 
 
 ## 🤝 Contribuindo com Novas Skills
 
-Deseja adicionar uma nova biblioteca ou framework ao hub?
-1. Crie uma pasta dentro de `skills/<Categoria>/skill_<nome_da_skill>/`.
-2. Adicione o arquivo `SKILL.md` contendo o cabeçalho YAML (`name` e `description`) e a documentação aprofundada.
-3. Adicione arquivos de referência na pasta `references/` ou subpastas conforme necessário.
-4. Envie um Pull Request!
+Deseja adicionar uma nova categoria ou biblioteca ao hub?
+1. Crie uma pasta dentro de `skills/<NomeDaCategoria>/skill_<nome_da_skill>/`.
+2. Adicione o arquivo `SKILL.md` contendo o cabeçalho YAML (`name` e `description`) com a visão geral.
+3. Adicione o arquivo `index_master.md` com a tabela de roteamento semântico.
+4. Distribua a documentação em subpastas temáticas (ex: `primeiros_passos/`, `api_referencia/`, `recursos_avancados/`).
+5. Envie um Pull Request!
 
 ---
 
 ## 📄 Licença
 
 Distribuído sob a licença [MIT](LICENSE).
-
