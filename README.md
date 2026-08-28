@@ -55,7 +55,7 @@ Você não precisa navegar pelo GitHub ou copiar arquivos manualmente. No termin
 ### 1. Modo Interativo (Menu Visual)
 
 ```bash
-npx skill-for-agents
+npx skill-agents
 ```
 *(ou diretamente via repositório GitHub)*:
 ```bash
@@ -78,22 +78,22 @@ Você também pode automatizar a instalação informando os parâmetros diretame
 
 ```bash
 # Importar todas as skills para o diretório padrão (.agent/skills/)
-npx skill-for-agents --all
+npx skill-agents --all
 
 # Importar todas as skills de uma categoria específica
-npx skill-for-agents --category APIs
+npx skill-agents --category APIs
 
 # Importar múltiplas categorias
-npx skill-for-agents --category "APIs,Bibliotecas React,TradingView"
+npx skill-agents --category "APIs,Bibliotecas React,TradingView"
 
 # Importar skills individuais para uma pasta customizada
-npx skill-for-agents --skill chatgpt,react-flow,pine-script --dest ./minhas-skills
+npx skill-agents --skill chatgpt,react-flow,pine-script --dest ./minhas-skills
 
 # Manter a organização em pastas de categorias no destino
-npx skill-for-agents --all --keep-categories
+npx skill-agents --all --keep-categories
 
 # Listar o catálogo completo de categorias e skills disponíveis
-npx skill-for-agents --list
+npx skill-agents --list
 ```
 
 ---

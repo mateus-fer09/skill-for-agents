@@ -1,11 +1,11 @@
 {
-  "name": "skill-for-agents",
-  "version": "1.1.0",
+  "name": "skill-agents",
+  "version": "1.0.0",
   "description": "CLI para importar e gerenciar skills de inteligência artificial / agentes de código em qualquer projeto",
   "type": "module",
   "main": "src/index.js",
   "bin": {
-    "skill-for-agents": "bin/cli.js",
+    "skill-agents": "bin/cli.js",
     "skills": "bin/cli.js"
   },
   "files": [
