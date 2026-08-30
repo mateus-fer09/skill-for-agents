@@ -44,7 +44,7 @@ Diferente das **skills tradicionais** que concentram toda a documentação em um
 1. **💰 Economia Drástica de Tokens:** O agente não precisa despejar dezenas de milhares de tokens no contexto toda vez que for chamado. Ele consulta o `index_master.md`, localiza o arquivo exato e consome apenas uma fração minúscula do contexto.
 2. **🎯 Leitura Just-in-Time (On-Demand):** O agente lê **estritamente o que é necessário** para responder à dúvida ou implementar o recurso solicitado.
 3. **🧠 Foco e Retenção Cognitiva:** Reduz o efeito *"lost in the middle"* e a degradação de atenção da LLM, mantendo a janela de contexto limpa para o código do projeto, ferramentas e raciocínio.
-4. **📚 Cobertura Exaustiva sem Penalidade:** Permite cobrir 100% de APIs complexas (como OpenAI API, Gemini API, React Flow ou Pine Script em dezenas de módulos detalhados) com profundidade de produção sem estourar limites de contexto.
+4. **📚 Cobertura Exaustiva sem Penalidade:** Permite cobrir 100% de ecossistemas complexos (como Electron em 300+ arquivos ou BlockNote em 77 arquivos) com profundidade de produção sem estourar limites de contexto.
 
 ---
 
@@ -66,7 +66,7 @@ O assistente interativo guiará você passo a passo:
 1. **Escolher o diretório de destino** (`.agent/skills/`, `.gemini/skills/`, `.claude/skills/`, `skills/` ou personalizado).
 2. **Escolher o modo de seleção**:
    - 📦 **Importar todas as skills** de todas as categorias.
-   - 📁 **Escolher por Categoria** (ex: `APIs`, `Bibliotecas React`, `TradingView`, etc.).
+   - 📁 **Escolher por Categoria** (ex: `APIs`, `Bibliotecas React`, `Electron`, `TradingView`, etc.).
    - 🎯 **Selecionar Skills Individuais** da lista com suporte a busca.
 3. **Escolher o formato de organização** (direto por pasta da skill ou mantendo as subpastas de categorias).
 
@@ -82,12 +82,14 @@ npx skill-agents --all
 
 # Importar todas as skills de uma categoria específica
 npx skill-agents --category APIs
+npx skill-agents --category Electron
+npx skill-agents --category "Bibliotecas React"
 
-# Importar múltiplas categorias
-npx skill-agents --category "APIs,Bibliotecas React,TradingView"
+# Importar múltiplas categorias simultaneamente
+npx skill-agents --category "APIs,Bibliotecas React,TradingView,Electron"
 
 # Importar skills individuais para uma pasta customizada
-npx skill-agents --skill chatgpt,react-flow,pine-script --dest ./minhas-skills
+npx skill-agents --skill chatgpt,claude,blocknote,electron --dest ./minhas-skills
 
 # Manter a organização em pastas de categorias no destino
 npx skill-agents --all --keep-categories
@@ -114,37 +116,61 @@ npx skill-agents --list
 
 ---
 
-## 📚 Catálogo de Categorias e Skills Atuais
+## 📚 Catálogo Completo de Categorias e Skills
 
-O repositório é estruturado em categorias com documentação completa e modular:
+Atualmente o hub conta com **10 skills completas** e mais de **730 arquivos** de referência técnica altamente estruturados:
 
 ```text
 skills/
 ├── APIs/
-│   ├── ChatGPT/                             # OpenAI API (24 arquivos de referência)
-│   └── Gemini/                              # Google Gemini API (22 arquivos de referência)
-├── Banco de Dados/
-│   └── better-sqlite3-docs/better-sqlite3/  # Better SQLite3 (11 arquivos de referência)
+│   ├── App Max/                             # Appmax API & Pagamentos (93 arquivos)
+│   ├── ChatGPT/                             # OpenAI API & ChatGPT (55 arquivos)
+│   ├── Claude/                              # Anthropic Claude Platform (54 arquivos)
+│   └── Gemini/                              # Google Gemini API (22 arquivos)
 ├── Bibliotecas React/
-│   └── skill_react_flow/                    # React Flow v12 (50 arquivos de referência)
+│   ├── BlockNote/                           # BlockNote Editor WYSIWYG (77 arquivos)
+│   └── skill_react_flow/                    # React Flow v12 (50 arquivos)
+├── Electron/                                # Electron Desktop Completo (302 arquivos)
 ├── TradingView/
-│   └── skill_pine_script/                   # Pine Script v5 / v6 (35 arquivos de referência)
-└── skill_boas_praticas_arquitetura_software/ # Arquitetura de Software (31 arquivos de referência)
+│   └── skill_pine_script/                   # Pine Script v5 / v6 (35 arquivos)
+├── Banco de Dados/
+│   └── better-sqlite3-docs/better-sqlite3/  # Better SQLite3 (11 arquivos)
+└── skill_boas_praticas_arquitetura_software/ # Arquitetura de Software (31 arquivos)
 ```
 
-### 🔌 APIs & Modelos de IA
-- **OpenAI / ChatGPT API (`chatgpt`)** — `24 arquivos`: Endpoints REST, Chat Completions, Assistants API v2 (Threads, Vector Stores, Code Interpreter), Realtime API (Voz/WebRTC), Structured Outputs (Pydantic/Zod), Function Calling, Batch API, Fine-Tuning e Multimodalidade (Vision, Whisper, TTS, DALL-E).
-- **Google Gemini API (`gemini`)** — `22 arquivos`: Integração com SDK `@google/genai` v1 e Python, chamadas multimodais (áudio/vídeo/imagem), Context Caching, Agent Environment, Deep Research, Batch API, Function Calling e Structured Outputs.
+---
 
-### 🎨 Bibliotecas Front-End & Gráficos
-- **React Flow (`react-flow`)** — `50 arquivos`: Arquitetura completa para `@xyflow/react` v12, nós e arestas customizados, layouting com Dagre/Elkjs, subflows, componentes Shadcn UI/React Flow UI, estado com Zustand, SSR e performance.
-- **TradingView / Pine Script (`pine-script`)** — `35 arquivos`: Desenvolvimento profissional em Pine Script v5 e v6, estratégias, backtesting avançado, multi-timeframe (`request.security`), arrays, maps, matrizes, UDTs, sistema de alertas e renderização gráfica.
+### 🔌 1. APIs & Modelos de IA
+- **Appmax API (`app-max`)** — `93 arquivos`: Base de conhecimento oficial e exaustiva para pagamentos (Cartão de Crédito com tokenização PCI, Pix QR Code/EMV, Boleto Bancário, Apple Pay), criação de pedidos, clientes, catálogo de produtos, assinaturas recorrentes, split de pagamentos para marketplaces com KYC Facematch, webhooks e servidor MCP para agentes.
+- **OpenAI / ChatGPT API (`chatgpt`)** — `55 arquivos`: Cobertura oficial da OpenAI API e ecossistema ChatGPT (Responses API, Agents SDK, modelos GPT-5, o3, GPT-4.1 e GPT-4o, Assistants API v2 com Vector Stores/Code Interpreter, Realtime API de voz/WebRTC, Structured Outputs com Pydantic/Zod, Function Calling, Batch API e Fine-Tuning).
+- **Claude Platform API (`claude`)** — `54 arquivos`: Guia oficial da Anthropic Claude Platform (Messages API, Batches API, Prompt Caching, Tool Calling, Managed Agents, modelos Claude 3.7 Sonnet com Extended Thinking / Hybrid Reasoning, Claude 3.5 Sonnet/Haiku, SDKs em TypeScript/Python/Go/Java/C#/PHP, Bedrock, Vertex AI e compliance).
+- **Google Gemini API (`gemini`)** — `22 arquivos`: Integração com SDK `@google/genai` v1 e Python, processamento multimodal de alta fidelidade (áudio, vídeo, imagem), Context Caching, Agent Environment, Deep Research, Batch API, Grounding com Google Search e Structured Outputs com JSON Schema.
 
-### 💾 Bancos de Dados & Armazenamento
-- **Better SQLite3 (`better-sqlite3`)** — `11 arquivos`: Guia completo da API síncrona de alta performance para Node.js, prepared statements, transações atômicas, PRAGMAs otimizados, tabelas virtuais, extensões e migrações.
+---
 
-### 🏛️ Engenharia & Arquitetura de Software
-- **Boas Práticas de Arquitetura de Software (`boas-praticas-arquitetura-software`)** — `31 arquivos`: Clean Architecture, Arquitetura Hexagonal, Microsserviços, Monólito Modular, Event-Driven, Decisões de Contratos/APIs, Documentação com ADRs e C4 Model, Heurísticas de Qualidade, Resiliência e Checklist de Revisão.
+### 🎨 2. Bibliotecas Front-End & Editores
+- **BlockNote Editor (`blocknote`)** — `77 arquivos`: Editor de texto rico baseado em blocos (estilo Notion) para React e TypeScript (ProseMirror + Yjs), custom schemas (`createReactBlockSpec`, `createReactInlineContentSpec`), componentes de UI (FormattingToolbar, SideMenu, Slash Menu), colaboração em tempo real, BlockNote AI e exportação (Markdown, HTML, DOCX, PDF).
+- **React Flow (`react-flow`)** — `50 arquivos`: Arquitetura completa para `@xyflow/react` v12, nós e arestas customizados, layouting automático (Dagre/Elkjs), subflows agrupados, componentes de interface Shadcn UI / React Flow UI, gerenciamento de estado complexo com Zustand, suporte SSR e testes automatizados.
+
+---
+
+### 🖥️ 3. Desktop & Aplicações Nativas
+- **Electron Desktop (`electron`)** — `302 arquivos`: Enciclopédia técnica completa para desenvolvimento desktop com Electron (Chromium + Node.js), modelo multi-processo (Main, Renderer, Preload, UtilityProcess), IPC seguro com `contextBridge`, gerenciamento de janelas e `BrowserView`/`WebContentsView`, menus, tray, notificações nativas, checklist de hardening e segurança, Electron Forge, empacotamento com auto-update e integração nativa com SO (Windows, macOS, Linux).
+
+---
+
+### 📈 4. Trading & Análise Financeira
+- **TradingView / Pine Script (`pine-script`)** — `35 arquivos`: Desenvolvimento profissional em Pine Script v5 e v6, indicadores, estratégias completas com backtesting e métricas anti-repainting, multi-timeframe (`request.security`), estruturas avançadas (Arrays, Maps, Matrizes, UDTs/Objetos e Métodos), alertas determinísticos e renderização gráfica (plots, tabelas, caixas, polilinhas).
+
+---
+
+### 💾 5. Bancos de Dados & Armazenamento
+- **Better SQLite3 (`better-sqlite3`)** — `11 arquivos`: Guia completo da API síncrona de alta performance para Node.js, prepared statements com binding de parâmetros, transações atômicas seguras, PRAGMAs otimizados, tabelas virtuais, extensões nativas e migrações.
+
+---
+
+### 🏛️ 6. Engenharia & Arquitetura de Software
+- **Boas Práticas de Arquitetura de Software (`boas-praticas-arquitetura-software`)** — `31 arquivos`: Clean Architecture, Arquitetura Hexagonal (Ports & Adapters), Microsserviços, Monólito Modular, Event-Driven Architecture, design de contratos e APIs, documentação arquitetural com ADRs e C4 Model, heurísticas de qualidade (confiabilidade, observabilidade, performance) e checklist de revisão.
 
 ---
 

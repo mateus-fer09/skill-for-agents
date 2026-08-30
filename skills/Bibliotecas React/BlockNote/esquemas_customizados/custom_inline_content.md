@@ -1,0 +1,216 @@
+---
+title: "Custom Inline Content Types"
+description: "In addition to the default inline content types that BlockNote offers, you can also make your own custom inline content using React components. Take a look at the demo below, in wh"
+topics:
+  - "Esquemas customizados"
+keywords:
+  - "Custom Inline Content Types"
+  - "createReactInlineContentSpec"
+  - "InlineContentSpec"
+  - "CustomInlineContentConfig"
+  - "StyledText"
+  - "content"
+  - "PropSchema"
+source_scope:
+  - "https://www.blocknotejs.org/docs/features/custom-schemas/custom-inline-content"
+---
+
+# [Custom Inline Content Types](#custom-inline-content-types)
+
+In addition to the default inline content types that BlockNote offers, you can also make your own custom inline content using React components. Take a look at the demo below, in which we add a custom mention tag to a BlockNote editor, as well as a custom [Suggestion Menu](/docs/react/components/suggestion-menus) to insert it.
+
+## [Creating a Custom Inline Content Type](#creating-a-custom-inline-content-type)
+
+Use the `createReactInlineContentSpec` function to create a custom inline content type. This function takes two arguments:
+
+```tsx
+function createReactInlineContentSpec(
+  blockConfig: CustomInlineContentConfig,
+  blockImplementation: ReactInlineContentImplementation,
+): InlineContentSpec;
+```
+
+It returns an instance of your custom inline content, or an `InlineContentSpec`. This `InlineContentSpec` then gets passed into your [BlockNote schema](/docs/features/custom-schemas#creating-your-own-schema) to add the inline content to the editor.
+
+Let's look at our custom mentions tag from the demo, and go over everything we pass to `createReactInlineContentSpec`:
+
+```tsx
+const Mention = createReactInlineContentSpec(
+  {
+    type: "mention",
+    propSchema: {
+      user: {
+        default: "Unknown",
+      },
+    },
+    content: "none",
+  } as const,
+  {
+    render: (props) => (
+      ...
+    ),
+  }
+);
+```
+
+### [Inline Content Config (`CustomInlineContentConfig`)](#inline-content-config-custominlinecontentconfig)
+
+The Inline Content Config describes the shape of your custom inline content. Use it to specify the type, properties (props) and content your custom inline content should support:
+
+```tsx
+type CustomInlineContentConfig = {
+  type: string;
+  content: "styled" | "plain" | "none";
+  readonly propSchema: PropSchema;
+};
+```
+
+`type:` Defines the identifier of the custom inline content.
+
+`content:` Defines what kind of editable content the inline content holds:
+
+- `"styled"` for rich text, i.e. [`StyledText`](/docs/foundations/document-structure#inline-content-objects).
+
+- `"plain"` for unstyled plain text, like an inline code or inline math source. Plain content can't hold formatting marks (bold, italic, etc.), and it's the only content type that supports [syntax highlighting](/docs/features/blocks/code-blocks#syntax-highlighting).
+
+- `"none"` if the inline content holds no editable content.
+
+> [!NOTE]
+> 
+
+*In the mentions demo, we want each mention to be a single, non-editable
+element, so we set `content` to `"none"`.*
+
+`propSchema:` The `PropSchema` specifies the props that the inline content supports. Inline content props (properties) are data stored with your inline content in the document, and can be used to customize its appearance or behavior.
+
+```tsx
+type PropSchema<PrimitiveType extends "boolean" | "number" | "string"> = Record<
+  string,
+  | {
+      default: PrimitiveType;
+      values?: PrimitiveType[];
+    }
+  | {
+      default: undefined;
+      type: PrimitiveType;
+      values?: PrimitiveType[];
+    }
+>;
+```
+
+`[key: string]` is the name of the prop. If you want it to have a default value, it should be defined as an object with the following properties:
+
+- 
+
+`default:` Specifies the prop's default value, from which `PrimitiveType` is inferred.
+
+- 
+
+`values?:` Specifies an array of values that the prop can take, for example, to limit the value to a list of pre-defined strings. If `values` is not defined, BlockNote assumes the prop can be any value of `PrimitiveType`.
+
+If you do not want the prop to have a default value, you can define it as an object with the following properties:
+
+- 
+
+`default:` Left `undefined`, as there is no default value.
+
+- 
+
+`type:` Specifies `PrimitiveType` that the prop can be set to, since the default value is `undefined` and cannot be inferred from.
+
+- 
+
+`values?:` Specifies an array of values that the prop can take, for example, to limit the value to a list of pre-defined strings. If `values` is not defined, BlockNote assumes the prop can be any value of `PrimitiveType`.
+
+> [!NOTE]
+> 
+
+*In the mentions demo, we add a `user` prop for the user that's being
+mentioned.*
+
+### [Inline Content Implementation (`ReactCustomInlineContentImplementation`)](#inline-content-implementation-reactcustominlinecontentimplementation)
+
+The Inline Content Implementation defines how the inline content should be rendered to HTML.
+
+```tsx
+type ReactCustomInlineContentImplementation = {
+  meta?: {
+    draggable?: boolean;
+  };
+  render: React.FC<{
+    inlineContent: InlineContent;
+    editor: BlockNoteEditor;
+    contentRef?: (node: HTMLElement | null) => void;
+  }>;
+  toExternalHTML?: React.FC<{
+    inlineContent: InlineContent;
+    editor: BlockNoteEditor;
+    contentRef?: (node: HTMLElement | null) => void;
+  }>;
+  parse?: (element: HTMLElement) => PartialInlineContent["props"] | undefined;
+  meta?: {
+    draggable?: boolean;
+  };
+};
+```
+
+`render:` This is your React component which defines how your custom inline content should be rendered, and takes three React props:
+
+- 
+
+`inlineContent:` The inline content that should be rendered. Its type and props will match the type and PropSchema defined in the Inline Content Config.
+
+- 
+
+`contentRef:` A React `ref` you can use to mark which element in your inline content is editable, this is only available if your inline content config contains `content: "styled"` or `content: "plain"`.
+
+- 
+
+`draggable:` Specifies whether the inline content can be dragged within the editor. If set to `true`, the inline content will be draggable. Defaults to `false` if not specified. If this is true, you should add `data-drag-handle` to the DOM element that should function as the drag handle.
+
+`toExternalHTML?:` This component is used whenever the inline content is being exported to HTML for use outside BlockNote, for example when copying it to the clipboard. If it's not defined, BlockNote will just use `render` for the HTML conversion. Takes the same props as `render`.
+
+> [!NOTE]
+> 
+
+*Note that your component passed to `toExternalHTML` is rendered and
+serialized in a separate React root, which means you can't use hooks that rely
+on React Contexts.*
+
+`parse?:` The `parse` function defines how to parse HTML content into your inline content, for example when pasting contents from the clipboard. If the element should be parsed into your custom inline content, you return the props that the block should be given. Otherwise, return `undefined`. Takes a single argument:
+
+- `element`: The HTML element that's being parsed.
+
+`meta?.draggable?:` Whether the inline content should be draggable.
+
+> [!NOTE]
+> 
+
+*Note that since inline content is, by definition, inline, your component
+should also return an HTML inline element.*
+
+## [Adding Custom Inline Content to the Editor](#adding-custom-inline-content-to-the-editor)
+
+Finally, create a BlockNoteSchema using the definition of your custom inline content:
+
+```tsx
+const schema = BlockNoteSchema.create({
+  inlineContentSpecs: {
+    // enable the default inline content if desired
+    ...defaultInlineContentSpecs,
+
+    // Add your own custom inline content:
+    mention: Mention,
+  },
+});
+```
+
+You can then instantiate your editor with this custom schema, as explained on the [Custom Schemas](/docs/features/custom-schemas) page.[
+
+Custom Blocks
+
+Learn how to create custom block types for your BlockNote editor](/docs/features/custom-schemas/custom-blocks)[
+
+Custom Styles
+
+Learn how to create custom style schemas for your BlockNote editor](/docs/features/custom-schemas/custom-styles)

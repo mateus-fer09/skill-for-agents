@@ -1,0 +1,183 @@
+---
+title: "Document Structure"
+description: "Each BlockNote document is made up of a list of blocks. A block is a piece of content like a paragraph, heading, list item or image. Blocks can be dragged around by users in the ed"
+topics:
+  - "Introducao e fundamentos"
+keywords:
+  - "Document Structure"
+  - "Block"
+  - "type"
+  - "props"
+  - "content"
+  - "InlineContent"
+  - "children"
+  - "styles"
+source_scope:
+  - "https://www.blocknotejs.org/docs/foundations/document-structure"
+---
+
+# [Document Structure](#document-structure)
+
+Each BlockNote document is made up of a list of blocks.
+A block is a piece of content like a paragraph, heading, list item or image. Blocks can be dragged around by users in the editor. A block contains a piece of content and optionally nested (child) blocks:
+
+## [Blocks](#blocks)
+
+The `Block` type is used to describe any given block in the editor:
+
+```tsx
+type Block = {
+  id: string;
+  type: string;
+  props: Record<string, boolean | number | string>;
+  content: InlineContent[] | TableContent | undefined;
+  children: Block[];
+};
+```
+
+### [Block Properties](#block-properties)
+
+- 
+
+**`id`**: The block's ID. Multiple blocks cannot share a single ID, and a block will keep the same ID from when it's created until it's removed.
+
+- 
+
+**`type`**: The block's type, such as a paragraph, heading, or list item. For an overview of built-in block types, see [Built-in Blocks](/docs/features/blocks).
+
+- 
+
+**`props`**: The block's properties, which is a set of key/value pairs that further specify how the block looks and behaves. Different block types have different props - see [Built-in Blocks](/docs/features/blocks) for more.
+
+- 
+
+**`content`**: The block's rich text content, usually represented as an array of `InlineContent` objects. This does not include content from any nested blocks. Read on to [Inline Content](#inline-content) for more on this.
+
+- 
+
+**`children`**: Any blocks nested inside the block. The nested blocks are also represented using `Block` objects.
+
+## [Inline Content](#inline-content)
+
+The `content` field of a block contains the rich-text content of a block. This is defined as an array of `InlineContent` objects. Inline content can either be styled text or a link (or a custom inline content type if you customize the editor schema).
+
+### [Inline Content Objects](#inline-content-objects)
+
+The `InlineContent` type is used to describe a piece of inline content:
+
+```tsx
+type Link = {
+  type: "link";
+  content: StyledText[];
+  href: string;
+};
+
+type StyledText = {
+  type: "text";
+  text: string;
+  styles: Styles;
+};
+
+type CustomInlineContent = {
+  type: string;
+  content: StyledText[] | string | undefined;
+  props: Record<string, boolean | number | string>;
+};
+
+type InlineContent = Link | StyledText | CustomInlineContent;
+```
+
+The `styles` property is explained below.
+
+### [Styles and Rich Text](#styles-and-rich-text)
+
+The `styles` property of `StyledText` objects is used to describe the rich text styles (e.g.: bold, italic, color) or other attributes of a piece of text. It's a set of key / value pairs that specify the styles applied to the text.
+
+See the [Default Styles](/docs/features/blocks/inline-content#default-styles) to learn which styles are included in BlockNote by default.
+
+## [See it for yourself](#see-it-for-yourself)
+
+The demo below shows the editor contents (document) in JSON. It's an array of `Block` objects that updates as you type in the editor:
+
+## [Special Cases](#special-cases)
+
+While most blocks use an array of `InlineContent` objects to describe their content (e.g.: paragraphs, headings, list items), some blocks, like [images](/docs/features/blocks/embeds#image), don't contain any rich text content, so their `content` fields will be `undefined`. There are a few other cases where `content` will not contain `InlineContent`.
+
+### [Plain Text Content](#plain-text-content)
+
+Some blocks, like [code blocks](/docs/features/blocks/code-blocks), store their content as plain text rather than rich text. Their `content` is still an array of `StyledText` objects, but the text is always unstyled (its `styles` is an empty object) and can't contain links or other inline content:
+
+```tsx
+type PlainContent = {
+  type: "text";
+  text: string;
+  styles: {};
+}[];
+```
+
+To read a plain block's text, use `plainContentToString`:
+
+```tsx
+import { plainContentToString } from "@blocknote/core";
+
+const text = plainContentToString(block.content);
+```
+
+[Custom inline content](/docs/features/custom-schemas/custom-inline-content) can hold plain text too, but there it's represented directly as a `string` rather than an array.
+
+Custom blocks and inline content opt into plain text content by setting `content: "plain"` - see [Custom Blocks](/docs/features/custom-schemas/custom-blocks) and [Custom Inline Content](/docs/features/custom-schemas/custom-inline-content).
+
+### [Column Blocks](#column-blocks)
+
+The `@blocknote/xl-multi-column` package allows you to organize blocks side-by-side in columns. It introduces 2 additional block types, the column and column list:
+
+```tsx
+type ColumnBlock = {
+  id: string;
+  type: "column";
+  props: { width: number };
+  content: undefined;
+  children: Block[];
+};
+
+type ColumnListBlock = {
+  id: string;
+  type: "columnList";
+  props: {};
+  content: undefined;
+  children: ColumnBlock[];
+};
+```
+
+While both of these act as regular blocks, there are a few additional restrictions to have in mind when working with them:
+
+- Children of columns must be regular blocks
+
+- Children of column lists must be columns
+
+- There must be at least 2 columns in a column list
+
+### [Tables](#tables)
+
+[Tables](/docs/features/blocks/tables) are also different, as they contain `TableContent`. Here, each table cell is represented as an array of `InlineContent` objects:
+
+```tsx
+type TableContent = {
+  type: "tableContent";
+  columnWidths: (number | undefined)[];
+  headerRows?: number;
+  headerCols?: number;
+  rows: {
+    cells: InlineContent[][];
+  }[];
+};
+```
+[
+
+Editor Setup
+
+Learn how to set up the editor.](/docs/getting-started/editor-setup)[
+
+Schemas
+
+Learn about how content types are defined in the editor.](/docs/foundations/schemas)

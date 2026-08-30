@@ -1,0 +1,237 @@
+---
+title: "Email Export"
+description: "It's possible to export BlockNote documents to email-compatible HTML, completely client-side."
+topics:
+  - "Importacao e exportacao"
+keywords:
+  - "Email Export"
+  - "ReactEmailExporter"
+  - "filename.html"
+  - "toReactEmailDocument"
+  - "options"
+  - "CSSProperties"
+source_scope:
+  - "https://www.blocknotejs.org/docs/features/export/email"
+---
+
+# [Email Export](#email-export)
+
+It's possible to export BlockNote documents to email-compatible HTML, completely client-side.
+
+> [!NOTE]
+> 
+
+This feature is provided by the `@blocknote/xl-email-exporter`. `xl-` packages
+are fully open source, but released under a copyleft license. A commercial
+license for usage in closed source, proprietary products comes as part of the
+[Business subscription](/pricing).
+
+First, install the `@blocknote/xl-email-exporter` packages:
+
+```tsx
+npm install @blocknote/xl-email-exporter
+```
+
+Then, create an instance of the `ReactEmailExporter` class. This exposes the following methods:
+
+```tsx
+import {
+  ReactEmailExporter,
+  reactEmailDefaultSchemaMappings,
+} from "@blocknote/xl-email-exporter";
+
+// Create the exporter
+const exporter = new ReactEmailExporter(
+  editor.schema,
+  reactEmailDefaultSchemaMappings,
+);
+
+// Convert the blocks to a react-email document
+const html = await exporter.toReactEmailDocument(editor.document);
+
+// Use react-email to write to file:
+await ReactEmail.render(html, `filename.html`);
+```
+
+See the [full example](/examples/interoperability/converting-blocks-to-react-email) below:
+
+### [Customizing the Email output](#customizing-the-email-output)
+
+`toReactEmailDocument` takes an optional `options` parameter, which allows you to customize:
+
+- **preview**: Set the preview text for the email (can be a string or an array of strings)
+
+- **header**: Add content to the top of the email (must be a React-Email compatible component)
+
+- **footer**: Add content to the bottom of the email (must be a React-Email compatible component)
+
+- **head**: Inject elements into the [Head element](https://react.email/docs/components/head)
+
+- **container**: Customize the container element (A component which will wrap the email content including the header and footer)
+
+- **bodyStyles**: Customize the body styles (a `CSSProperties` object), providing an object here will completely override the default styles with what you provide
+
+Example usage:
+
+```tsx
+import React from "react";
+import {
+  ReactEmailExporter,
+  reactEmailDefaultSchemaMappings,
+} from "@blocknote/xl-email-exporter";
+import { BlockNoteEditor } from "@blocknote/core";
+import { Text, Container } from "@react-email/components";
+
+const editor = BlockNoteEditor.create();
+
+// ---cut---
+const exporter = new ReactEmailExporter(
+  editor.schema,
+  reactEmailDefaultSchemaMappings,
+);
+
+const html = await exporter.toReactEmailDocument(editor.document, {
+  preview: "This is a preview of the email content",
+  header: <Text>Header</Text>,
+  footer: <Text>Footer</Text>,
+  head: <title>My email</title>,
+  container: ({ children }) => <Container>{children}</Container>,
+  // These are the default body styles that are set by default
+  bodyStyles: {
+    fontFamily:
+      "'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif",
+    fontSize: "16px",
+    lineHeight: "1.5",
+    color: "#333",
+  },
+});
+```
+
+### [Custom mappings / custom schemas](#custom-mappings--custom-schemas)
+
+The `ReactEmailExporter` constructor takes a `schema` and `mappings` parameter.
+A *mapping* defines how to convert a BlockNote schema element (a Block, Inline Content, or Style) to a React-Email element.
+If you're using a [custom schema](/docs/features/custom-schemas) in your editor, or if you want to overwrite how default BlockNote elements are converted to React Email, you can pass your own `mappings`:
+
+For example, use the following code in case your schema has an `extraBlock` type:
+
+```tsx
+import { ReactEmailExporter, reactEmailDefaultSchemaMappings } from "@blocknote/xl-email-exporter";
+import { Text } from "@react-email/components";
+
+new ReactEmailExporter(schema, {
+    blockMapping: {
+        ...reactEmailDefaultSchemaMappings.blockMapping,
+        myCustomBlock: (block, exporter) => {
+            return <Text>My custom block</Text>;
+        },
+    },
+    inlineContentMapping: reactEmailDefaultSchemaMappings.inlineContentMapping,
+    styleMapping: reactEmailDefaultSchemaMappings.styleMapping,
+});
+```
+
+### [Exporter options](#exporter-options)
+
+The `ReactEmailExporter` constructor takes an optional `options` parameter.
+While conversion happens on the client-side, the default setup uses a server hosted proxy to resolve files:
+
+```tsx
+const defaultOptions = {
+  // a function to resolve external resources in order to avoid CORS issues
+  // by default, this calls a BlockNote hosted server-side proxy to resolve files
+  resolveFileUrl: corsProxyResolveFileUrl,
+  // the strings rendered into the exported document (file link texts, error
+  // placeholders); pass a locale from @blocknote/core/locales (or your
+  // editor's dictionary) to export in another language
+  dictionary: locales.en,
+  // the colors to use in the email for things like highlighting, background colors and font colors.
+  colors: COLORS_DEFAULT, // defaults from @blocknote/core
+};
+```
+
+### [Custom styles](#custom-styles)
+
+Want to tweak the default styles of the email? You can use `reactEmailDefaultSchemaMappingsWithStyles` to create a custom mapping with your own styles.
+
+```tsx
+import {
+  ReactEmailExporter,
+  reactEmailDefaultSchemaMappingsWithStyles,
+} from "@blocknote/xl-email-exporter";
+import { Text } from "@react-email/components";
+
+const { blockMapping, inlineContentMapping, styleMapping } =
+  reactEmailDefaultSchemaMappingsWithStyles({
+    textStyles: {
+      paragraph: {
+        style: {
+          fontSize: 16,
+          lineHeight: 1.5,
+          margin: 3,
+          minHeight: 24,
+        },
+      },
+    },
+  });
+
+new ReactEmailExporter(schema, {
+  // You can still use the default block mapping, but you can also overwrite it
+  blockMapping: {
+    ...blockMapping,
+    audio: (block, exporter) => {
+      return <Text>Audio block</Text>;
+    },
+  },
+  inlineContentMapping,
+  styleMapping,
+});
+```
+
+### [Math & diagram blocks](#math--diagram-blocks)
+
+The [math](/docs/features/blocks/math) and [diagram](/docs/features/blocks/diagrams) blocks ship their own email mappings, exporting as images with the LaTeX/Mermaid source as the alt text. See [exporting math](/docs/features/blocks/math#email) and [exporting diagrams](/docs/features/blocks/diagrams#exporting) for the setup.
+
+**Image delivery.** By default the images are embedded as data URLs — self-contained, but some email clients (notably Gmail and Outlook for Windows) don't display data URL images and show the alt text instead. For those, deliver the images as inline `cid:` attachments (the most widely supported way to embed generated images) and pass the collected attachments to your mailer at send time:
+
+```tsx
+import {
+  ReactEmailExporter,
+  reactEmailDefaultSchemaMappings,
+  createCIDImageDelivery,
+} from "@blocknote/xl-email-exporter";
+import {
+  createInlineMathMapping,
+  createMathBlockMapping,
+} from "@blocknote/math-block/email-exporter";
+import { createDiagramBlockMapping } from "@blocknote/diagram-block/email-exporter";
+
+const imageDelivery = createCIDImageDelivery();
+const exporter = new ReactEmailExporter(editor.schema, {
+  ...reactEmailDefaultSchemaMappings,
+  blockMapping: {
+    ...reactEmailDefaultSchemaMappings.blockMapping,
+    mathBlock: createMathBlockMapping({ imageDelivery }),
+    diagram: createDiagramBlockMapping({ imageDelivery }),
+  },
+  inlineContentMapping: {
+    ...reactEmailDefaultSchemaMappings.inlineContentMapping,
+    math: createInlineMathMapping({ imageDelivery }),
+  },
+});
+
+const html = await exporter.toReactEmailDocument(editor.document);
+
+// e.g. with nodemailer (works the same with other mailers):
+await transporter.sendMail({ html, attachments: imageDelivery.attachments });
+```
+
+**Server-side rendering.** Emails are usually rendered server-side at send time — see [exporting math](/docs/features/blocks/math#email) and [exporting diagrams server-side](/docs/features/blocks/diagrams#exporting-server-side) for what that needs.[
+
+DOCX
+
+Export BlockNote documents to a docx word (Office Open XML) file.](/docs/features/export/docx)[
+
+ODT
+
+Export BlockNote documents to an ODT (Open Document Text) file.](/docs/features/export/odt)

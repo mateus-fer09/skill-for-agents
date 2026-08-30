@@ -1,0 +1,23 @@
+---
+title: "TraceCategoriesAndOptions Object"
+description: "- categoryFilter string - Um filtro para controlar quais grupos de categoria devem ser rastreados. Um filtro pode ter um prefixo '-' opcional para excluir grupos de categorias que "
+topics:
+  - "Api"
+  - "Estruturas"
+keywords:
+  - "TraceCategoriesAndOptions Object"
+  - "categoryFilter"
+  - "traceOptions"
+  - "record_mode"
+  - "enable_sampling"
+  - "enable_systrace"
+  - "false"
+source_scope:
+  - "https://www.electronjs.org/pt/docs/latest/api/structures/trace-categories-and-options"
+---
+
+# TraceCategoriesAndOptions Object
+
+- `categoryFilter` string - Um filtro para controlar quais grupos de categoria devem ser rastreados. Um filtro pode ter um prefixo '-' opcional para excluir grupos de categorias que contêm uma categoria correspondente. Ter ambos incluído e excluídos padrões de categoria na mesma lista não é suportado. Exemplos: `test_MyTest*`, `test_MyTest*,test_OtherStuff`, `-excluded_category1,-excluded_category2`.
+
+- `traceOptions` string - Controla qual tipo de rastreamento está ativo, é uma sequência das seguintes strings delimitadas por virgula: `record-until-full`, `record-continuously`, `trace-to-console`, `enable-sampling`, `enable-systrace`, e.g. `'record-until-full,enable-sampling'`. As primeiras 3 opções são modos de trace e mutuamente exclusivos. Se mais de um modo de gravação de rastreamento aparecer na string de `traceOptions`, o último tem procedência. Se nenhum dos modos de gravação do rastreamento for especificado, o modo de gravação é `record-until-full`. A opção de trace será primeiramente resetada para a opção padrão (`record_mode` para `record-until-full`, `enable_sampling` e `enable_systrace` para `false`) antes das opções serem analisadas os `traceOptions` são aplicadas nele.

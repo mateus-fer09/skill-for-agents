@@ -1,76 +1,143 @@
----
-title: "OpenAI API Skill — Index Master e Roteador Semântico"
-description: "Roteador central de conhecimento da OpenAI API Skill. Mapeamento bidirecional de intenções técnicas de desenvolvimento para arquivos modulares e mapa hierárquico dos 24 módulos especializados."
-topics: ["index", "roteamento-semantico", "mapa-de-contexto", "intencoes", "openai-api-skill"]
-keywords: ["index_master", "tabela de roteamento", "mapa de contexto", "openai api docs"]
-source_scope: "OpenAI API Docs: Curated Index, Full Reference & Knowledge Map"
----
+# Índice Mestre e Roteador de Conhecimento (index_master.md)
 
-# OpenAI API Skill — Index Master
-
-## Identidade da Base de Conhecimento
-
-- **Tecnologia:** OpenAI API & SDKs Oficiais (@openai SDK v4+ no TypeScript/Node.js, `openai` >= 1.50 no Python, REST API v1).
-- **Tipo:** Plataforma de Inteligência Artificial para Modelos de Linguagem, Raciocínio, Visão, Áudio, Voz em Tempo Real e Automação de Agentes.
-- **Escopo Total Coberto:** 100% da documentação oficial de `https://developers.openai.com/api/docs` dividida em 24 módulos especializados.
+Este arquivo é o **Roteador Principal de Conhecimento** da Skill OpenAI API & Ecossistema ChatGPT. Ele permite que agentes de IA e desenvolvedores identifiquem instantaneamente o arquivo correto para qualquer tarefa de implementação, consulta de parâmetros, arquitetura ou troubleshooting.
 
 ---
 
-## Tabela de Roteamento Semântico por Intenção
+## 1. Visão Geral da Tecnologia
 
-| Intenção do Desenvolvedor / Pergunta Técnica | Arquivo Principal a Consultar | Arquivos Complementares |
-| :--- | :--- | :--- |
-| Instalação de SDKs, configuração de API Key, Org ID e Project ID | [`primeiros_passos/instalacao_e_autenticacao.md`](./primeiros_passos/instalacao_e_autenticacao.md) | [`operacao_e_escala/admin_usage_e_projects.md`](./operacao_e_escala/admin_usage_e_projects.md) |
-| Primeiro chat, Responses API vs Chat Completions, Streaming SSE | [`primeiros_passos/quickstart_responses_e_chat.md`](./primeiros_passos/quickstart_responses_e_chat.md) | [`api_referencia/parametros_requisicao_e_respostas.md`](./api_referencia/parametros_requisicao_e_respostas.md) |
-| Comparação de modelos (GPT-4o, GPT-4o-mini, o1, o3-mini, context window, preços) | [`primeiros_passos/catalogo_de_modelos.md`](./primeiros_passos/catalogo_de_modelos.md) | [`api_referencia/parametros_requisicao_e_respostas.md`](./api_referencia/parametros_requisicao_e_respostas.md) |
-| Gerar JSON 100% estrito com Pydantic ou Zod (`strict: true`) | [`recursos_centrais/structured_outputs.md`](./recursos_centrais/structured_outputs.md) | [`recursos_centrais/function_calling_tool_use.md`](./recursos_centrais/function_calling_tool_use.md) |
-| Function Calling, definição de ferramentas `tools`, chamadas paralelas e modos forçados | [`recursos_centrais/function_calling_tool_use.md`](./recursos_centrais/function_calling_tool_use.md) | [`recursos_centrais/structured_outputs.md`](./recursos_centrais/structured_outputs.md) |
-| Voz bidirecional em tempo real via WebSockets / WebRTC (Realtime API) | [`recursos_centrais/realtime_api_voz_e_webrtc.md`](./recursos_centrais/realtime_api_voz_e_webrtc.md) | [`multimodal_e_especializados/audio_whisper_e_tts.md`](./multimodal_e_especializados/audio_whisper_e_tts.md) |
-| Assistants API v2, Threads, Messages, Runs, Run Steps e Streaming | [`recursos_centrais/assistants_api_v2.md`](./recursos_centrais/assistants_api_v2.md) | [`recursos_centrais/file_search_e_vector_stores.md`](./recursos_centrais/file_search_e_vector_stores.md) |
-| Busca em arquivos (RAG) com Vector Stores e File Search | [`recursos_centrais/file_search_e_vector_stores.md`](./recursos_centrais/file_search_e_vector_stores.md) | [`operacao_e_escala/files_e_storage_management.md`](./operacao_e_escala/files_e_storage_management.md) |
-| Executar código Python em sandbox seguro pelo assistente | [`recursos_centrais/code_interpreter.md`](./recursos_centrais/code_interpreter.md) | [`recursos_centrais/assistants_api_v2.md`](./recursos_centrais/assistants_api_v2.md) |
-| Analisar imagens, gráficos e OCR com GPT-4o (parâmetros de detalhe e tokens) | [`multimodal_e_especializados/visao_e_processamento_de_imagens.md`](./multimodal_e_especializados/visao_e_processamento_de_imagens.md) | [`primeiros_passos/catalogo_de_modelos.md`](./primeiros_passos/catalogo_de_modelos.md) |
-| Transcrever/traduzir áudio com Whisper ou sintetizar voz com TTS-1/HD | [`multimodal_e_especializados/audio_whisper_e_tts.md`](./multimodal_e_especializados/audio_whisper_e_tts.md) | [`recursos_centrais/realtime_api_voz_e_webrtc.md`](./recursos_centrais/realtime_api_voz_e_webrtc.md) |
-| Gerar, editar e variar imagens com DALL-E 3 e DALL-E 2 | [`multimodal_e_especializados/geracao_de_imagens_dalle.md`](./multimodal_e_especializados/geracao_de_imagens_dalle.md) | [`api_referencia/endpoints_rest_reference.md`](./api_referencia/endpoints_rest_reference.md) |
-| Gerar embeddings semânticos (`text-embedding-3`) e filtrar conteúdo impróprio | [`multimodal_e_especializados/embeddings_e_moderacao.md`](./multimodal_e_especializados/embeddings_e_moderacao.md) | [`recursos_centrais/file_search_e_vector_stores.md`](./recursos_centrais/file_search_e_vector_stores.md) |
-| Processamento massivo assíncrono com 50% de desconto (Batch API) | [`operacao_e_escala/batch_api.md`](./operacao_e_escala/batch_api.md) | [`operacao_e_escala/files_e_storage_management.md`](./operacao_e_escala/files_e_storage_management.md) |
-| Treinar e customizar modelos via Fine-Tuning (SFT / DPO) | [`operacao_e_escala/fine_tuning_api.md`](./operacao_e_escala/fine_tuning_api.md) | [`operacao_e_escala/files_e_storage_management.md`](./operacao_e_escala/files_e_storage_management.md) |
-| Upload, listagem, download e exclusão de arquivos (/v1/files) | [`operacao_e_escala/files_e_storage_management.md`](./operacao_e_escala/files_e_storage_management.md) | [`recursos_centrais/file_search_e_vector_stores.md`](./recursos_centrais/file_search_e_vector_stores.md) |
-| Gestão de projetos, chaves de API, cotas e auditoria de logs (Admin API) | [`operacao_e_escala/admin_usage_e_projects.md`](./operacao_e_escala/admin_usage_e_projects.md) | [`primeiros_passos/instalacao_e_autenticacao.md`](./primeiros_passos/instalacao_e_autenticacao.md) |
-| Catálogo completo de endpoints REST, métodos HTTP e payloads | [`api_referencia/endpoints_rest_reference.md`](./api_referencia/endpoints_rest_reference.md) | [`api_referencia/parametros_requisicao_e_respostas.md`](./api_referencia/parametros_requisicao_e_respostas.md) |
-| Dicionário de parâmetros (`temperature`, `top_p`, `reasoning_effort`, etc.) | [`api_referencia/parametros_requisicao_e_respostas.md`](./api_referencia/parametros_requisicao_e_respostas.md) | [`api_referencia/endpoints_rest_reference.md`](./api_referencia/endpoints_rest_reference.md) |
-| Tratamento de erros (400, 401, 404, 429, 500, 503), Rate Limits e Exponential Backoff | [`api_referencia/erros_rate_limits_e_retries.md`](./api_referencia/erros_rate_limits_e_retries.md) | [`primeiros_passos/instalacao_e_autenticacao.md`](./primeiros_passos/instalacao_e_autenticacao.md) |
+A OpenAI API é a plataforma líder para construção de aplicações cognitivas e agentes autônomos. Seus pilares centrais são:
+1. **Responses API (`/v1/responses`)**: O paradigma moderno centrado em conversas, ferramentas nativas integradas e execução contínua.
+2. **Modelos de Raciocínio (o-series)**: Cadeia de pensamento deliberativa (*Chain of Thought*) com controle fino via `reasoning_effort`.
+3. **OpenAI Agents SDK**: Orquestração multi-agente, transferências declarativas (*handoffs*), guardrails de segurança e suporte a MCP.
+4. **Multimodalidade e Tempo Real**: Visão, voz bidirecional de ultra-baixa latência (WebRTC/WebSocket/SIP) e vídeo com Sora.
+5. **Governança Empresarial**: Controle de acesso baseado em papéis (RBAC), Workload Identity Federation (sem chaves estáticas) e provedor Terraform oficial.
 
 ---
 
-## Mapa de Contexto e Catálogo dos 24 Módulos
+## 2. Regras Globais da Skill
 
-### 1. `primeiros_passos/`
-- **[`instalacao_e_autenticacao.md`](./primeiros_passos/instalacao_e_autenticacao.md)**: Instalação dos SDKs Python e TypeScript, autenticação via chaves de projeto (`sk-proj-...`), organização, timeouts, proxies e headers customizados.
-- **[`quickstart_responses_e_chat.md`](./primeiros_passos/quickstart_responses_e_chat.md)**: Primeiros passos práticos com Chat Completions e a nova Responses API, streaming com SSE e manipulação de mensagens.
-- **[`catalogo_de_modelos.md`](./primeiros_passos/catalogo_de_modelos.md)**: Matriz comparativa de capacidades, preços, janelas de contexto e limites da família GPT-4o, GPT-4o-mini, modelos de raciocínio `o1`/`o3-mini`, DALL-E, Whisper e Embeddings.
+1. **Adote a Responses API para Todas as Novas Aplicações**: Utilize `client.responses.create` em vez do endpoint legado de Chat Completions.
+2. **Utilize JSON Schema Estrito (`strict: true`)**: Garanta 100% de precisão de schema em Structured Outputs utilizando modelos Pydantic ou schemas Zod.
+3. **Otimize Custos com Prompt Caching**: Mantenha as mensagens de sistema e contexto estático fixos no início do prompt para obter 50% de desconto automático em prompts >= 1.024 tokens.
+4. **Isolamento de Segurança por Projeto**: Empregue Project API Keys (`sk-proj-...`) ou tokens OIDC de curta duração via Workload Identity Federation.
 
-### 2. `recursos_centrais/`
-- **[`structured_outputs.md`](./recursos_centrais/structured_outputs.md)**: Modo rigoroso `strict: true` garantindo 100% de conformidade com schemas JSON, integração com Pydantic (Python) e Zod (TypeScript).
-- **[`function_calling_tool_use.md`](./recursos_centrais/function_calling_tool_use.md)**: Definição de ferramentas `tools`, chamadas paralelas, modos `tool_choice` forçados e loop de execução de agentes.
-- **[`realtime_api_voz_e_webrtc.md`](./recursos_centrais/realtime_api_voz_e_webrtc.md)**: Sessões de voz bidirecional de baixíssima latência via WebSockets e WebRTC, eventos de áudio PCM16, VAD e execução de tools.
-- **[`assistants_api_v2.md`](./recursos_centrais/assistants_api_v2.md)**: Assistentes persistentes, gerenciamento de Threads, Messages, ciclo de vida de Runs, Run Steps e streaming.
-- **[`file_search_e_vector_stores.md`](./recursos_centrais/file_search_e_vector_stores.md)**: Mecanismo de RAG automático com Vector Stores, estratégias de chunking estático/auto, indexação e busca vetorial.
-- **[`code_interpreter.md`](./recursos_centrais/code_interpreter.md)**: Ambiente sandbox isolado para execução de código Python em tempo de inferência, manipulação de arquivos de entrada e gráficos/planilhas de saída.
+---
 
-### 3. `multimodal_e_especializados/`
-- **[`visao_e_processamento_de_imagens.md`](./multimodal_e_especializados/visao_e_processamento_de_imagens.md)**: Análise visual com GPT-4o, URLs remotas, base64, parâmetros de detalhe `low`/`high`/`auto` e fórmulas de cálculo de tokens.
-- **[`audio_whisper_e_tts.md`](./multimodal_e_especializados/audio_whisper_e_tts.md)**: Transcrição e tradução com Whisper-1 (timestamps de palavra/segmento) e síntese de voz natural com TTS-1 e TTS-1-HD.
-- **[`geracao_de_imagens_dalle.md`](./multimodal_e_especializados/geracao_de_imagens_dalle.md)**: Criação de imagens de alta fidelidade com DALL-E 3 (`standard`/`hd`, estilos `vivid`/`natural`) e edição/variação com DALL-E 2.
-- **[`embeddings_e_moderacao.md`](./multimodal_e_especializados/embeddings_e_moderacao.md)**: Geração de vetores semânticos com `text-embedding-3-small/large` (redução de dimensões) e verificação de segurança com a Text Moderation API.
+## 3. Tabela de Roteamento por Intenção do Usuário
 
-### 4. `operacao_e_escala/`
-- **[`batch_api.md`](./operacao_e_escala/batch_api.md)**: Processamento de requisições em lote com 50% de desconto em tokens, ciclo de vida dos jobs em arquivos JSONL e SLAs de 24 horas.
-- **[`fine_tuning_api.md`](./operacao_e_escala/fine_tuning_api.md)**: Ajuste fino supervisionado (SFT) e otimização por preferência direta (DPO) para gpt-4o e gpt-4o-mini, validação e hiperparâmetros.
-- **[`files_e_storage_management.md`](./operacao_e_escala/files_e_storage_management.md)**: Endpoints `/v1/files`, propósitos (`assistants`, `batch`, `fine-tune`), cotas de armazenamento e scripts de limpeza.
-- **[`admin_usage_e_projects.md`](./operacao_e_escala/admin_usage_e_projects.md)**: Governança corporativa, gestão programática de projetos, rate limits, alocação de créditos e auditoria de logs.
+| Intenção do Usuário | Arquivo que Deve Ser Consultado |
+|---|---|
+| Iniciar um projeto ou fazer a primeira chamada na API | [`fundamentos/overview_e_arquitetura.md`](fundamentos/overview_e_arquitetura.md) e [`responses_api/introducao_e_quickstart.md`](responses_api/introducao_e_quickstart.md) |
+| Configurar autenticação, chaves de projeto ou OIDC na nuvem | [`fundamentos/autenticacao_e_seguranca.md`](fundamentos/autenticacao_e_seguranca.md) e [`administracao_e_infra/workload_identity_federation.md`](administracao_e_infra/workload_identity_federation.md) |
+| Instalar e configurar SDK Python, TypeScript ou OpenAI CLI | [`fundamentos/sdks_e_cli.md`](fundamentos/sdks_e_cli.md) |
+| Escolher o modelo ideal para um caso de uso específico | [`modelos/catalogo_e_selecao.md`](modelos/catalogo_e_selecao.md) |
+| Usar modelos de raciocínio (o1, o3, o3-mini) e reasoning_effort | [`modelos/modelos_de_raciocinio.md`](modelos/modelos_de_raciocinio.md) |
+| Consultar preços, limites de tokens e custos de contexto | [`modelos/precificacao_e_limites.md`](modelos/precificacao_e_limites.md) |
+| Extrair JSON garantido com Pydantic ou Zod | [`responses_api/structured_outputs.md`](responses_api/structured_outputs.md) |
+| Implementar streaming Server-Sent Events (SSE) ou WebSockets | [`responses_api/streaming_e_websockets.md`](responses_api/streaming_e_websockets.md) |
+| Gerenciar conversas de múltiplos turnos e compactar contexto | [`responses_api/gerenciamento_de_estado.md`](responses_api/gerenciamento_de_estado.md) |
+| Otimizar latência e custos com Prompt Caching ou Predicted Outputs | [`responses_api/prompt_caching_e_predicted.md`](responses_api/prompt_caching_e_predicted.md) |
+| Definir e executar ferramentas customizadas (Function Calling) | [`ferramentas_e_mcp/function_calling.md`](ferramentas_e_mcp/function_calling.md) |
+| Usar Web Search, File Search (Vector Stores) ou Code Interpreter | [`ferramentas_e_mcp/ferramentas_hospedadas.md`](ferramentas_e_mcp/ferramentas_hospedadas.md) |
+| Automatizar interfaces com Computer Use ou gerar diffs de código | [`ferramentas_e_mcp/computer_use_e_patch.md`](ferramentas_e_mcp/computer_use_e_patch.md) |
+| Conectar servidores MCP remotos ou Secure MCP Tunnels | [`ferramentas_e_mcp/mcp_e_conectores.md`](ferramentas_e_mcp/mcp_e_conectores.md) |
+| Criar agentes autônomos com o OpenAI Agents SDK | [`agents_sdk/definicao_de_agentes.md`](agents_sdk/definicao_de_agentes.md) |
+| Orquestrar múltiplos agentes com handoffs e triagem | [`agents_sdk/orquestracao_e_fluxos.md`](agents_sdk/orquestracao_e_fluxos.md) |
+| Adicionar guardrails, aprovação humana e isolamento em sandbox | [`agents_sdk/guardrails_e_sandboxes.md`](agents_sdk/guardrails_e_sandboxes.md) |
+| Usar Agent Builder visual ou componentes front-end ChatKit | [`agents_sdk/agent_builder_e_chatkit.md`](agents_sdk/agent_builder_e_chatkit.md) |
+| Gerar áudio com TTS, transcrever gravações ou clonar vozes | [`multimidia_e_tempo_real/audio_e_transcricao.md`](multimidia_e_tempo_real/audio_e_transcricao.md) |
+| Analisar imagens com visão computacional ou gerar imagens | [`multimidia_e_tempo_real/visao_e_geracao_imagens.md`](multimidia_e_tempo_real/visao_e_geracao_imagens.md) |
+| Gerar vídeos cinematográficos com o modelo Sora | [`multimidia_e_tempo_real/geracao_video_sora.md`](multimidia_e_tempo_real/geracao_video_sora.md) |
+| Criar conversas por voz em tempo real no navegador (WebRTC) | [`multimidia_e_tempo_real/realtime_api_webrtc.md`](multimidia_e_tempo_real/realtime_api_webrtc.md) |
+| Conectar servidores back-end à Realtime API via WebSockets | [`multimidia_e_tempo_real/realtime_api_websocket.md`](multimidia_e_tempo_real/realtime_api_websocket.md) |
+| Integrar agentes de voz com telefonia PSTN/SIP (Twilio, VoIP) | [`multimidia_e_tempo_real/realtime_sip_e_telefonia.md`](multimidia_e_tempo_real/realtime_sip_e_telefonia.md) |
+| Criar Plugins para o ChatGPT com o Apps SDK e MCP | [`chatgpt_e_plugins/chatgpt_plugins_apps_sdk.md`](chatgpt_e_plugins/chatgpt_plugins_apps_sdk.md) |
+| Disparar Workspace Agents corporativos via API de backend | [`chatgpt_e_plugins/workspace_agents_api.md`](chatgpt_e_plugins/workspace_agents_api.md) |
+| Criar GPT Actions com contratos OpenAPI para Custom GPTs | [`chatgpt_e_plugins/gpt_actions.md`](chatgpt_e_plugins/gpt_actions.md) |
+| Treinar modelos com Supervised Fine-Tuning (SFT) | [`fine_tuning_e_evals/fine_tuning_sft.md`](fine_tuning_e_evals/fine_tuning_sft.md) |
+| Ajustar modelos de raciocínio com RFT ou DPO | [`fine_tuning_e_evals/reinforcement_fine_tuning.md`](fine_tuning_e_evals/reinforcement_fine_tuning.md) |
+| Avaliar acurácia de prompts com Evals, Graders e Datasets | [`fine_tuning_e_evals/evals_e_graders.md`](fine_tuning_e_evals/evals_e_graders.md) |
+| Filtrar conteúdo ofensivo com Moderação e Red Teaming | [`fine_tuning_e_evals/red_teaming_e_moderacao.md`](fine_tuning_e_evals/red_teaming_e_moderacao.md) |
+| Administrar Organizações, Projetos, Usuários e Service Accounts | [`administracao_e_infra/rbac_organizacoes_projetos.md`](administracao_e_infra/rbac_organizacoes_projetos.md) |
+| Consultar logs de auditoria e políticas de retenção de dados | [`administracao_e_infra/audit_logs_e_compliance.md`](administracao_e_infra/audit_logs_e_compliance.md) |
+| Automatizar infraestrutura da OpenAI com Terraform | [`administracao_e_infra/terraform_e_automacao.md`](administracao_e_infra/terraform_e_automacao.md) |
+| Consultar referência exata de parâmetros de qualquer endpoint REST | [`referencia_api/`](referencia_api/) |
+| Acessar códigos-fonte de exemplo prontos para rodar | [`exemplos/`](exemplos/) |
 
-### 5. `api_referencia/`
-- **[`endpoints_rest_reference.md`](./api_referencia/endpoints_rest_reference.md)**: Catálogo exaustivo com todos os endpoints HTTP REST da OpenAI API, métodos, cabeçalhos e esquemas de payload.
-- **[`parametros_requisicao_e_respostas.md`](./api_referencia/parametros_requisicao_e_respostas.md)**: Dicionário detalhado de todos os hiperparâmetros de amostragem (`temperature`, `top_p`, `reasoning_effort`, `stream_options`, `logprobs`, `seed`) e anatomia de respostas.
-- **[`erros_rate_limits_e_retries.md`](./api_referencia/erros_rate_limits_e_retries.md)**: Guia completo de códigos de erro HTTP, cabeçalhos de taxa de consumo (RPM/TPM), tiers organizacionais e estratégias de retry com backoff.
+---
+
+## 4. Mapa Detalhado de Contexto por Arquivo
+
+### 4.1 Seção `fundamentos/`
+- **[`fundamentos/overview_e_arquitetura.md`](fundamentos/overview_e_arquitetura.md)**: Arquitetura REST geral, Base URL, comparação Responses API vs Chat Completions.
+- **[`fundamentos/autenticacao_e_seguranca.md`](fundamentos/autenticacao_e_seguranca.md)**: Chaves de projeto, chaves de admin, variáveis de ambiente, mTLS e segurança.
+- **[`fundamentos/sdks_e_cli.md`](fundamentos/sdks_e_cli.md)**: Instalação, inicialização e tratamento de exceções em Python, TypeScript e CLI.
+- **[`fundamentos/rate_limits_e_custos.md`](fundamentos/rate_limits_e_custos.md)**: Limites de taxa (TPM/RPM), tiers de conta, otimização de latência e controle de custos.
+
+### 4.2 Seção `modelos/`
+- **[`modelos/catalogo_e_selecao.md`](modelos/catalogo_e_selecao.md)**: Catálogo de modelos (GPT-5.6 Sol, GPT-5.5, GPT-4.1, o-series) e matriz de seleção.
+- **[`modelos/modelos_de_raciocinio.md`](modelos/modelos_de_raciocinio.md)**: Modelos o1, o3, o3-mini, Chain of Thought interna, `reasoning_effort` e boas práticas de prompting.
+- **[`modelos/precificacao_e_limites.md`](modelos/precificacao_e_limites.md)**: Tabela de preços por milhão de tokens (entrada, saída, cache), janelas de contexto e limites de output.
+
+### 4.3 Seção `responses_api/`
+- **[`responses_api/introducao_e_quickstart.md`](responses_api/introducao_e_quickstart.md)**: Ciclo de vida, métodos `create`, `retrieve`, `cancel` e parâmetros essenciais.
+- **[`responses_api/structured_outputs.md`](responses_api/structured_outputs.md)**: JSON Schema estrito, Pydantic, Zod e garantia de formato 100% aderente.
+- **[`responses_api/streaming_e_websockets.md`](responses_api/streaming_e_websockets.md)**: Transmissão Server-Sent Events (SSE) e Responses WebSocket Mode.
+- **[`responses_api/gerenciamento_de_estado.md`](responses_api/gerenciamento_de_estado.md)**: Continuação de turnos, `conversation_id`, encadeamento e compactação no servidor.
+- **[`responses_api/prompt_caching_e_predicted.md`](responses_api/prompt_caching_e_predicted.md)**: Funcionamento do Prompt Caching automático (50% de desconto) e aceleração com Predicted Outputs.
+
+### 4.4 Seção `ferramentas_e_mcp/`
+- **[`ferramentas_e_mcp/function_calling.md`](ferramentas_e_mcp/function_calling.md)**: Definição de funções customizadas, `tool_choice` e Programmatic Tool Calling.
+- **[`ferramentas_e_mcp/ferramentas_hospedadas.md`](ferramentas_e_mcp/ferramentas_hospedadas.md)**: Web Search, File Search (Vector Stores) e Code Interpreter (Python sandbox).
+- **[`ferramentas_e_mcp/computer_use_e_patch.md`](ferramentas_e_mcp/computer_use_e_patch.md)**: Automação de interface gráfica com Computer Use, Apply Patch para diffs de código e Local Shell.
+- **[`ferramentas_e_mcp/mcp_e_conectores.md`](ferramentas_e_mcp/mcp_e_conectores.md)**: Servidores MCP remotos, conectores corporativos gerenciados e Secure MCP Tunnels.
+
+### 4.5 Seção `agents_sdk/`
+- **[`agents_sdk/definicao_de_agentes.md`](agents_sdk/definicao_de_agentes.md)**: Estrutura do objeto `Agent`, instruções dinâmicas, modelos e ferramentas no Agents SDK.
+- **[`agents_sdk/orquestracao_e_fluxos.md`](agents_sdk/orquestracao_e_fluxos.md)**: Multi-agentes, handoffs declarativos e o padrão Agente como Ferramenta.
+- **[`agents_sdk/guardrails_e_sandboxes.md`](agents_sdk/guardrails_e_sandboxes.md)**: Guardrails de entrada/saída, aprovação humana (*Human-in-the-Loop*) e isolamento em sandbox.
+- **[`agents_sdk/agent_builder_e_chatkit.md`](agents_sdk/agent_builder_e_chatkit.md)**: Construção visual com Agent Builder e componentes web prontos com ChatKit.
+
+### 4.6 Seção `multimidia_e_tempo_real/`
+- **[`multimidia_e_tempo_real/audio_e_transcricao.md`](multimidia_e_tempo_real/audio_e_transcricao.md)**: Text-to-Speech (`/v1/audio/speech`), Whisper (`/v1/audio/transcriptions`), traduções e vozes.
+- **[`multimidia_e_tempo_real/visao_e_geracao_imagens.md`](multimidia_e_tempo_real/visao_e_geracao_imagens.md)**: Visão computacional multimodal e geração de imagem com GPT-image-1 e DALL-E 3.
+- **[`multimidia_e_tempo_real/geracao_video_sora.md`](multimidia_e_tempo_real/geracao_video_sora.md)**: API de Vídeos Sora (`/v1/videos`), ciclo de vida assíncrono e download.
+- **[`multimidia_e_tempo_real/realtime_api_webrtc.md`](multimidia_e_tempo_real/realtime_api_webrtc.md)**: Conexão direta de navegadores e mobile à Realtime API via WebRTC com tokens efêmeros.
+- **[`multimidia_e_tempo_real/realtime_api_websocket.md`](multimidia_e_tempo_real/realtime_api_websocket.md)**: Conexão server-to-server à Realtime API via WebSockets para áudio PCM16 bidirecional.
+- **[`multimidia_e_tempo_real/realtime_sip_e_telefonia.md`](multimidia_e_tempo_real/realtime_sip_e_telefonia.md)**: Integração telefônica PSTN/SIP via `/v1/realtime/calls` com Twilio e gateways VoIP.
+
+### 4.7 Seção `chatgpt_e_plugins/`
+- **[`chatgpt_e_plugins/chatgpt_plugins_apps_sdk.md`](chatgpt_e_plugins/chatgpt_plugins_apps_sdk.md)**: Criação de Plugins para ChatGPT com Apps SDK, MCP e componentes visuais.
+- **[`chatgpt_e_plugins/workspace_agents_api.md`](chatgpt_e_plugins/workspace_agents_api.md)**: Disparo de ChatGPT Workspace Agents corporativos via API REST.
+- **[`chatgpt_e_plugins/gpt_actions.md`](chatgpt_e_plugins/gpt_actions.md)**: Criação de GPT Actions com esquemas OpenAPI 3.0 para Custom GPTs.
+
+### 4.8 Seção `fine_tuning_e_evals/`
+- **[`fine_tuning_e_evals/fine_tuning_sft.md`](fine_tuning_e_evals/fine_tuning_sft.md)**: Supervised Fine-Tuning (SFT), datasets JSONL, hiperparâmetros e checkpoints.
+- **[`fine_tuning_e_evals/reinforcement_fine_tuning.md`](fine_tuning_e_evals/reinforcement_fine_tuning.md)**: Reinforcement Fine-Tuning (RFT) e Direct Preference Optimization (DPO).
+- **[`fine_tuning_e_evals/evals_e_graders.md`](fine_tuning_e_evals/evals_e_graders.md)**: OpenAI Evals, Graders (model_graded, python_graded) e Trace Grading.
+- **[`fine_tuning_e_evals/red_teaming_e_moderacao.md`](fine_tuning_e_evals/red_teaming_e_moderacao.md)**: Moderations API (`/v1/moderations`), mitigação de prompt injection e red teaming.
+
+### 4.9 Seção `administracao_e_infra/`
+- **[`administracao_e_infra/rbac_organizacoes_projetos.md`](administracao_e_infra/rbac_organizacoes_projetos.md)**: Gestão hierárquica de Organizações, Projetos, Usuários e Service Accounts.
+- **[`administracao_e_infra/audit_logs_e_compliance.md`](administracao_e_infra/audit_logs_e_compliance.md)**: Logs de auditoria corporativa e políticas de privacidade Zero Data Retention (ZDR).
+- **[`administracao_e_infra/workload_identity_federation.md`](administracao_e_infra/workload_identity_federation.md)**: Federação OIDC com AWS, GCP, Azure, GitHub Actions e Kubernetes.
+- **[`administracao_e_infra/terraform_e_automacao.md`](administracao_e_infra/terraform_e_automacao.md)**: Provedor oficial Terraform da OpenAI para gestão de infraestrutura como código.
+
+### 4.10 Seção `referencia_api/`
+- **[`referencia_api/responses_e_chat.md`](referencia_api/responses_e_chat.md)**: Endpoints `/v1/responses`, cancel, retrieve, compact e chat legado.
+- **[`referencia_api/audio_e_voz.md`](referencia_api/audio_e_voz.md)**: Endpoints `/v1/audio/speech`, transcriptions, translations e voices.
+- **[`referencia_api/imagens_e_videos.md`](referencia_api/imagens_e_videos.md)**: Endpoints `/v1/images/*` e `/v1/videos/*` (Sora API).
+- **[`referencia_api/arquivos_e_vector_stores.md`](referencia_api/arquivos_e_vector_stores.md)**: Endpoints `/v1/files`, `/v1/uploads` e `/v1/vector_stores`.
+- **[`referencia_api/fine_tuning_e_batches.md`](referencia_api/fine_tuning_e_batches.md)**: Endpoints `/v1/fine_tuning/jobs` e `/v1/batches`.
+- **[`referencia_api/evals_e_containers.md`](referencia_api/evals_e_containers.md)**: Endpoints `/v1/evals`, `/v1/graders` e `/v1/containers`.
+- **[`referencia_api/realtime_calls_e_webhooks.md`](referencia_api/realtime_calls_e_webhooks.md)**: Endpoints `/v1/realtime/*` e validação de assinatura de Webhooks.
+- **[`referencia_api/admin_e_organizacao.md`](referencia_api/admin_e_organizacao.md)**: Endpoints `/v1/organization/*` e `/v1/projects/*`.
+
+### 4.11 Seção `exemplos/`
+- **[`exemplos/quickstart_responses_python.md`](exemplos/quickstart_responses_python.md)**: Quickstart executável em Python.
+- **[`exemplos/quickstart_responses_typescript.md`](exemplos/quickstart_responses_typescript.md)**: Quickstart executável em TypeScript.
+- **[`exemplos/agent_multi_ferramentas.md`](exemplos/agent_multi_ferramentas.md)**: Agente multi-ferramentas com busca web e handoffs.
+- **[`exemplos/realtime_audio_streaming.md`](exemplos/realtime_audio_streaming.md)**: Áudio bidirecional via WebSocket em Python.
+- **[`exemplos/structured_data_extraction.md`](exemplos/structured_data_extraction.md)**: Extração estruturada de faturas com Pydantic.
+- **[`exemplos/fine_tuning_workflow.md`](exemplos/fine_tuning_workflow.md)**: Pipeline completo de fine-tuning e validação.

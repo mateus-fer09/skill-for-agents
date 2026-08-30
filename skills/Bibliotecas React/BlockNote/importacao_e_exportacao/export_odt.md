@@ -1,0 +1,127 @@
+---
+title: "ODT Export"
+description: "It's possible to export BlockNote documents to ODT, completely client-side."
+topics:
+  - "Importacao e exportacao"
+keywords:
+  - "ODT Export"
+  - "ODTExporter"
+  - "toODTDocument"
+  - "options"
+  - "schema"
+  - "mappings"
+  - "extraBlock"
+source_scope:
+  - "https://www.blocknotejs.org/docs/features/export/odt"
+---
+
+# [ODT Export](#odt-export)
+
+It's possible to export BlockNote documents to ODT, completely client-side.
+
+> [!NOTE]
+> 
+
+This feature is provided by the `@blocknote/xl-odt-exporter`. `xl-` packages
+are fully open source, but released under a copyleft license. A commercial
+license for usage in closed source, proprietary products comes as part of the
+[Business subscription](/pricing).
+
+First, install the `@blocknote/xl-odt-exporter` package:
+
+```tsx
+npm install @blocknote/xl-odt-exporter
+```
+
+Then, create an instance of the `ODTExporter` class. This exposes the following methods:
+
+```tsx
+import {
+  ODTExporter,
+  odtDefaultSchemaMappings,
+} from "@blocknote/xl-odt-exporter";
+
+// Create the exporter
+const exporter = new ODTExporter(editor.schema, odtDefaultSchemaMappings);
+
+// Convert the blocks to a ODT document (Blob)
+const odtDocument = await exporter.toODTDocument(editor.document);
+```
+
+See the [full example](/examples/interoperability/converting-blocks-to-odt) below:
+
+### [Customizing the ODT output file](#customizing-the-odt-output-file)
+
+`toODTDocument` takes an optional `options` parameter, which allows you to customize different options (like headers and footers).
+
+Example usage:
+
+```tsx
+const odt = await exporter.toODTDocument(testDocument, {
+  // XML string
+  footer: "<text:p>FOOTER</text:p>",
+  // XMLDocument
+  header: new DOMParser().parseFromString(
+    `<text:p xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0">HEADER</text:p>`,
+    "text/xml",
+  ),
+});
+```
+
+### [Custom mappings / custom schemas](#custom-mappings--custom-schemas)
+
+The `ODTExporter` constructor takes a `schema`, `mappings` and `options` parameter.
+A *mapping* defines how to convert a BlockNote schema element (a Block, Inline Content, or Style) to the [ODT](https://docs.oasis-open.org/office/OpenDocument/v1.3/os/part3-schema/OpenDocument-v1.3-os-part3-schema.html) XML element.
+If you're using a [custom schema](/docs/features/custom-schemas) in your editor, or if you want to overwrite how default BlockNote elements are converted to ODT XML elements, you can pass your own `mappings`:
+
+For example, use the following code in case your schema has an `extraBlock` type:
+
+```tsx
+import {
+  ODTExporter,
+  odtDefaultSchemaMappings,
+} from "@blocknote/xl-odt-exporter";
+
+new ODTExporter(schema, {
+  blockMapping: {
+    ...odtDefaultSchemaMappings.blockMapping,
+    myCustomBlock: (block, exporter) => {
+      return <text:p>My custom block</text:p>;
+    },
+  },
+  inlineContentMapping: odtDefaultSchemaMappings.inlineContentMapping,
+  styleMapping: odtDefaultSchemaMappings.styleMapping,
+});
+```
+
+### [Math & diagram blocks](#math--diagram-blocks)
+
+The [math](/docs/features/blocks/math) and [diagram](/docs/features/blocks/diagrams) blocks ship their own ODT mappings — math exports as native (editable) formula objects, diagrams as embedded images. See [exporting math](/docs/features/blocks/math#odt) and [exporting diagrams](/docs/features/blocks/diagrams#exporting) for the setup.
+
+### [Exporter options](#exporter-options)
+
+The `ODTExporter` constructor takes an optional `options` parameter.
+While conversion happens on the client-side, the default setup uses a server hosted proxy to resolve files:
+
+```tsx
+const defaultOptions = {
+  // a function to resolve external resources in order to avoid CORS issues
+  // by default, this calls a BlockNote hosted server-side proxy to resolve files
+  resolveFileUrl: corsProxyResolveFileUrl,
+  // the strings rendered into the exported document (file link texts, error
+  // placeholders); pass a locale from @blocknote/core/locales (or your
+  // editor's dictionary) to export in another language
+  dictionary: locales.en,
+  // the colors to use in the ODT for things like highlighting, background colors and font colors.
+  colors: COLORS_DEFAULT, // defaults from @blocknote/core
+};
+```
+[
+
+Email Export
+
+Export BlockNote documents to an email using React Email.](/docs/features/export/email)[
+
+Import
+
+It's possible to import content into BlockNote.](/docs/features/import)

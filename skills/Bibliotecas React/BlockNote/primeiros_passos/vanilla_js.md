@@ -1,0 +1,98 @@
+---
+title: "Getting Started With Vanilla JS"
+description: "BlockNote is mainly designed as a quick and easy drop-in block-based editor for React apps, but can also be used in vanilla JavaScript apps. However, this does involve writing your"
+topics:
+  - "Primeiros passos"
+keywords:
+  - "Getting Started With Vanilla JS"
+  - "state"
+  - "setState"
+  - "subscribe"
+source_scope:
+  - "https://www.blocknotejs.org/docs/getting-started/vanilla-js"
+---
+
+# [Getting Started With Vanilla JS](#getting-started-with-vanilla-js)
+
+BlockNote is mainly designed as a quick and easy drop-in block-based editor for React apps, but can also be used in vanilla JavaScript apps. However, this does involve writing your own UI elements.
+
+> [!NOTE]
+> 
+
+Warning
+
+We recommend using BlockNote with React so you can use the built-in UI
+components. This document will explain how you can use BlockNote without
+React, and write your own components, but this is not recommended as you'll
+lose the great out-of-the-box experience that BlockNote offers.
+
+## [Installing with NPM](#installing-with-npm)
+
+To install only the vanilla JS parts of BlockNote with [NPM](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm), run:
+
+```tsx
+npm install @blocknote/core
+```
+
+## [Creating an editor](#creating-an-editor)
+
+This is how to create a new BlockNote editor:
+
+```tsx
+import { BlockNoteEditor } from "@blocknote/core";
+import "@blocknote/core/fonts/inter.css";
+import "@blocknote/core/style.css";
+
+const editor = BlockNoteEditor.create();
+
+editor.mount(document.getElementById("root")!); // element to append the editor to
+```
+
+Make sure to import both `@blocknote/core/style.css` (the editor's styles) and `@blocknote/core/fonts/inter.css` (the default font).
+
+Now, you'll have a plain BlockNote instance on your page. However, it's missing some menus and other UI elements.
+
+## [Creating your own UI elements](#creating-your-own-ui-elements)
+
+Because you can't use the built-in React [UI Components](/docs/react/components), you'll need to create and register your own UI elements.
+
+Each UI element is backed by an [extension](/docs/features/extensions). You can retrieve an extension instance from the editor with `editor.getExtension(...)`, and each one exposes a store that holds its current state (visibility, position, and any element-specific data). A store is a small observable container with these primary members: `state` to read the current value, `setState` to update it, and `subscribe` to be notified of changes. The available UI element extensions are:
+````````````
+
+| UI element | Extension |
+| --- | --- |
+| Formatting Toolbar | FormattingToolbarExtension |
+| Link Toolbar | LinkToolbarExtension |
+| Side Menu | SideMenuExtension |
+| Suggestion Menu | SuggestionMenu |
+| File Panel | FilePanelExtension |
+| Table Handles | TableHandlesExtension |
+
+While it's up to you to decide how you want the elements to be rendered, the store lets you react to state changes so you can update the visibility, position, and contents of your elements:
+
+```tsx
+import { SideMenuExtension } from "@blocknote/core";
+
+const extension = editor.getExtension(SideMenuExtension)!;
+
+// Read the current state at any time:
+const state = extension.store.state;
+
+// Subscribe to state changes, e.g. to reposition or show/hide your element:
+const unsubscribe = extension.store.subscribe(() => {
+  const state = extension.store.state;
+
+  // ...update your UI element based on `state`
+});
+```
+
+Let's look at how you could add the [Side Menu](/docs/react/components/side-menu) to your editor. The example below mounts a plain editor and builds a custom Side Menu from scratch, using the extension's store to position it and its `blockDragStart`/`blockDragEnd` methods to handle dragging:
+[
+
+With Next.js
+
+Details on integrating BlockNote with Next.js](/docs/getting-started/nextjs)[
+
+Editor Setup
+
+Learn how to set up the editor.](/docs/getting-started/editor-setup)
